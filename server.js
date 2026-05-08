@@ -237,15 +237,32 @@ app.post('/api/users/password', requireAdmin, (req, res) => {
     res.json({ ok: true });
 });
 
+// POPRAWKA: naprawa blokady przy edycji admina oraz obsługa cardLimit: 0
 app.post('/api/users/permissions', requireAdmin, (req, res) => {
     const { id, permissions, cardLimit, role } = req.body;
     const usersData = getUsers();
     const idx = usersData.users.findIndex(u => u.id === parseInt(id));
     if (idx === -1) return res.json({ ok: false, error: 'Użytkownik nie istnieje' });
-    if (usersData.users[idx].role === 'admin' && role === 'user') return res.json({ ok: false, error: 'Nie możesz zdegradować głównego admina' });
+
+    // Blokuj degradację admina tylko gdy role jest jawnie ustawione na 'user'
+    if (usersData.users[idx].role === 'admin' && role !== undefined && role !== 'admin') {
+        return res.json({ ok: false, error: 'Nie możesz zdegradować głównego admina' });
+    }
+
     if (permissions !== undefined) usersData.users[idx].permissions = permissions;
-    if (cardLimit !== undefined) usersData.users[idx].cardLimit = (cardLimit === '' || cardLimit === null) ? null : parseInt(cardLimit);
-    if (role) usersData.users[idx].role = role;
+
+    // Obsługa cardLimit: 0 (zero to poprawna wartość, nie null)
+    if (cardLimit !== undefined) {
+        if (cardLimit === '' || cardLimit === null) {
+            usersData.users[idx].cardLimit = null;
+        } else {
+            const parsed = parseInt(cardLimit);
+            usersData.users[idx].cardLimit = isNaN(parsed) ? null : parsed;
+        }
+    }
+
+    if (role !== undefined) usersData.users[idx].role = role;
+
     saveUsers(usersData);
     res.json({ ok: true });
 });
