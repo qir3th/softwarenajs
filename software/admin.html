@@ -474,7 +474,7 @@ var session = localStorage.getItem('session');
 var deleteUserId = null;
 var pwdUserId = null;
 var permsUserId = null;
-var usersDataMap = {}; // przechowuje dane użytkowników do modali (bezpieczna alternatywa dla inline JSON)
+var usersDataMap = {};
 
 if (!session) { location.href = '/login'; }
 
@@ -504,7 +504,6 @@ function loadUsers(){
         perms.canDelete?'🗑️':''
       ].filter(Boolean).join(' ');
 
-      // Zapisz dane użytkownika do mapy (bezpieczne – bez inline JSON w onclick)
       usersDataMap[u.id] = { role: u.role, cardLimit: u.cardLimit, permissions: perms };
 
       return '<div class="user-item">'+
@@ -666,7 +665,9 @@ function adminDeleteCard(id){
 
 function doLogout(){
   fetch('/api/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session})});
-  localStorage.removeItem('session');localStorage.removeItem('role');location.href='/login';
+  localStorage.clear();
+  sessionStorage.clear();
+  location.href='/login';
 }
 
 function toast(msg,type){
