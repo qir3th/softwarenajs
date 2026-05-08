@@ -104,8 +104,8 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
   <div class="form-section">
     <h2>Rodzice</h2>
     <div class="two-col">
-      <div class="field"><label>Imię ojca</label><input id="father" placeholder="Marek"></div>
-      <div class="field"><label>Imię matki</label><input id="mother" placeholder="Anna"></div>
+      <div class="field"><label>Imię ojca</label><input id="fathersName" placeholder="Marek"></div>
+      <div class="field"><label>Imię matki</label><input id="mothersName" placeholder="Anna"></div>
     </div>
     <div class="two-col">
       <div class="field"><label>Nazwisko rodowe ojca</label><input id="fathersFamilyName" placeholder="Kowalski"></div>
@@ -222,7 +222,7 @@ function save(){
   if(!ok){toast('Wypełnij wszystkie wymagane pola','err');return;}
 
   var data = {};
-  ['name','surname','familyName','sex','nationality','birthPlace','countryOfBirth','pesel','father','mother','fathersFamilyName','mothersFamilyName','seriesAndNumber','givenDate','expiryDate','adress','homeDate'].forEach(id=>{
+  ['name','surname','familyName','sex','nationality','birthPlace','countryOfBirth','pesel','fathersName','mothersName','fathersFamilyName','mothersFamilyName','seriesAndNumber','givenDate','expiryDate','adress','homeDate'].forEach(id=>{
     data[id] = document.getElementById(id).value;
   });
   data.day = parseInt(day);

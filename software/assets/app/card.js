@@ -100,7 +100,7 @@ function loadReadyData(result){
 }
 
 function setImage(image){
-    document.querySelector(".id_own_image").style.backgroundImage = `url(${image})`;
+    document.getElementById("cwel").src = image;
 }
 
 function setData(id, value){
