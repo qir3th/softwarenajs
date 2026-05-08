@@ -377,6 +377,19 @@ body::before {
       <div class="empty-users">Ładowanie użytkowników...</div>
     </div>
   </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>🃏 Wszystkie karty <span class="section-head-meta" id="card-count"></span></h2>
+      <button class="btn-sm" onclick="toggleCards()">Pokaż / Ukryj</button>
+    </div>
+    <div id="cardListWrap" style="display:none">
+      <div class="user-list" id="cardList">
+        <div class="empty-users">Kliknij „Pokaż / Ukryj", aby załadować karty.</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -461,6 +474,7 @@ var session = localStorage.getItem('session');
 var deleteUserId = null;
 var pwdUserId = null;
 var permsUserId = null;
+var usersDataMap = {}; // przechowuje dane użytkowników do modali (bezpieczna alternatywa dla inline JSON)
 
 if (!session) { location.href = '/login'; }
 
@@ -490,6 +504,9 @@ function loadUsers(){
         perms.canDelete?'🗑️':''
       ].filter(Boolean).join(' ');
 
+      // Zapisz dane użytkownika do mapy (bezpieczne – bez inline JSON w onclick)
+      usersDataMap[u.id] = { role: u.role, cardLimit: u.cardLimit, permissions: perms };
+
       return '<div class="user-item">'+
         '<div class="user-left">'+
         '<div class="user-avatar '+(isAdmin?'admin-av':'')+'">'+initials+'</div>'+
@@ -501,7 +518,7 @@ function loadUsers(){
         '<div class="user-right">'+
         '<span class="badge '+(isAdmin?'admin':'user')+'">'+(isAdmin?'ADMIN':'USER')+'</span>'+
         limitBadge+
-        '<button class="icon-btn perms" onclick="askPerms('+u.id+',\''+esc(u.role)+'\','+(u.cardLimit!==null?u.cardLimit:'null')+','+JSON.stringify(perms)+')">⚙ Upr.</button>'+
+        '<button class="icon-btn perms" onclick="askPerms('+u.id+')">⚙ Upr.</button>'+
         '<button class="icon-btn pwd" onclick="askPwd('+u.id+')">🔑 Hasło</button>'+
         (isAdmin?'':'<button class="icon-btn del" onclick="askDel('+u.id+')">🗑 Usuń</button>')+
         '</div>'+
@@ -535,13 +552,15 @@ function addUser(){
 function askDel(id){deleteUserId=id;document.getElementById('delModal').classList.add('open');}
 function askPwd(id){pwdUserId=id;document.getElementById('newPwdInput').value='';document.getElementById('pwdModal').classList.add('open');}
 
-function askPerms(id, role, cardLimit, perms){
+function askPerms(id){
+  var u = usersDataMap[id];
+  if(!u) return;
   permsUserId=id;
-  document.getElementById('permsRole').value = role;
-  document.getElementById('permsLimit').value = (cardLimit!==null&&cardLimit!==undefined) ? cardLimit : '';
-  setPermToggle('create', perms.canCreate!==false);
-  setPermToggle('edit', perms.canEdit!==false);
-  setPermToggle('delete', perms.canDelete!==false);
+  document.getElementById('permsRole').value = u.role;
+  document.getElementById('permsLimit').value = (u.cardLimit!==null&&u.cardLimit!==undefined) ? u.cardLimit : '';
+  setPermToggle('create', u.permissions.canCreate!==false);
+  setPermToggle('edit', u.permissions.canEdit!==false);
+  setPermToggle('delete', u.permissions.canDelete!==false);
   document.getElementById('permsModal').classList.add('open');
 }
 
@@ -581,8 +600,14 @@ function confirmPwd(){
 function savePerms(){
   if(!permsUserId)return;
   var role = document.getElementById('permsRole').value;
-  var limitVal = document.getElementById('permsLimit').value;
-  var cardLimit = limitVal==='' ? null : parseInt(limitVal);
+  var limitVal = document.getElementById('permsLimit').value.trim();
+  var cardLimit;
+  if(limitVal==='') {
+    cardLimit = null;
+  } else {
+    var parsed = parseInt(limitVal);
+    cardLimit = isNaN(parsed) ? null : parsed;
+  }
   var permissions = {
     canCreate: document.getElementById('perm-create').classList.contains('active'),
     canEdit: document.getElementById('perm-edit').classList.contains('active'),
@@ -593,6 +618,49 @@ function savePerms(){
     if(d.ok){toast('Zapisano uprawnienia','ok');loadUsers();}
     else toast(d.error||'Błąd','err');
     closeModals();
+  });
+}
+
+var cardsLoaded = false;
+function toggleCards(){
+  var wrap = document.getElementById('cardListWrap');
+  var visible = wrap.style.display !== 'none';
+  wrap.style.display = visible ? 'none' : 'block';
+  if(!visible && !cardsLoaded) loadAllCards();
+}
+function loadAllCards(){
+  fetch('/api/admin/cards',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session})})
+  .then(r=>r.json()).then(d=>{
+    if(!d.ok){document.getElementById('cardList').innerHTML='<div class="empty-users">Błąd ładowania kart.</div>';return;}
+    cardsLoaded = true;
+    document.getElementById('card-count').textContent = d.cards.length + ' kart';
+    var list = document.getElementById('cardList');
+    if(d.cards.length===0){list.innerHTML='<div class="empty-users">Brak kart w systemie.</div>';return;}
+    list.innerHTML = d.cards.map(c=>{
+      var date = c.createdAt ? new Date(c.createdAt).toLocaleDateString('pl-PL') : '—';
+      var dob = c.day+'.'+c.month+'.'+c.year;
+      return '<div class="user-item">'+
+        '<div class="user-left">'+
+        '<div class="user-avatar" style="font-size:11px;">ID</div>'+
+        '<div>'+
+          '<div class="user-login">'+esc(c.name)+' '+esc(c.surname)+'</div>'+
+          '<div class="user-meta">ur. '+dob+' · dodał: '+(c.createdByLogin||'—')+' · '+date+'</div>'+
+        '</div>'+
+        '</div>'+
+        '<div class="user-right">'+
+        '<span class="badge user" style="font-family:\'DM Mono\',monospace;font-size:10px">#'+c.id+'</span>'+
+        '<button class="icon-btn del" onclick="adminDeleteCard('+c.id+')">🗑 Usuń</button>'+
+        '</div>'+
+        '</div>';
+    }).join('');
+  });
+}
+function adminDeleteCard(id){
+  if(!confirm('Usunąć kartę #'+id+'?')) return;
+  fetch('/api/delete-card',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session,id})})
+  .then(r=>r.json()).then(d=>{
+    if(d.ok){toast('Karta usunięta','ok');cardsLoaded=false;loadAllCards();loadUsers();}
+    else toast(d.error||'Błąd','err');
   });
 }
 
