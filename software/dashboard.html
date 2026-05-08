@@ -3,84 +3,466 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+<title>Dashboard — mObywatel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;}
-.topbar{background:#1a1a22;border-bottom:1px solid #2a2a35;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
-.topbar-left{display:flex;align-items:center;gap:12px;}
-.topbar h1{font-size:18px;font-weight:700;color:#fff;}
-.topbar h1 span{color:#6c63ff;}
-.topbar-right{display:flex;align-items:center;gap:10px;}
-.role-badge{font-size:11px;background:#1e1a3a;color:#9d97ff;padding:4px 10px;border-radius:20px;border:1px solid #3a3560;}
-.btn-sm{background:none;border:1px solid #2a2a35;color:#aaa;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;transition:all 0.2s;}
-.btn-sm:hover{border-color:#6c63ff;color:#fff;}
-.btn-sm.primary{background:#6c63ff;border-color:#6c63ff;color:#fff;}
-.btn-sm.primary:hover{background:#5a52e0;}
-.btn-sm.danger{border-color:#5c2020;color:#e07070;}
-.btn-sm.danger:hover{background:#2a1515;border-color:#e05c5c;}
-.main{max-width:900px;margin:0 auto;padding:24px 16px;}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.section-title{font-size:16px;font-weight:600;color:#fff;}
-.section-count{font-size:13px;color:#666;margin-left:8px;}
-.empty{text-align:center;padding:60px 20px;color:#555;}
-.empty i{font-size:40px;margin-bottom:12px;display:block;}
-.empty p{font-size:15px;}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;}
-.card-item{background:#1a1a22;border:1px solid #2a2a35;border-radius:14px;padding:18px;transition:border-color 0.2s;}
-.card-item:hover{border-color:#3a3a55;}
-.card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.card-avatar{width:42px;height:42px;border-radius:50%;background:#1e1a3a;border:1px solid #3a3560;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#9d97ff;flex-shrink:0;}
-.card-name{font-size:15px;font-weight:600;color:#fff;line-height:1.3;}
-.card-id{font-size:11px;color:#555;margin-top:2px;}
-.card-info{font-size:12px;color:#666;margin-bottom:14px;}
-.card-info span{color:#aaa;}
-.card-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.card-actions button{flex:1;min-width:70px;padding:8px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid #2a2a35;background:none;color:#aaa;transition:all 0.2s;}
-.card-actions button:hover{background:#23232f;color:#fff;}
-.card-actions button.copy-btn:hover{border-color:#6c63ff;color:#9d97ff;}
-.card-actions button.edit-btn:hover{border-color:#63a8ff;color:#63a8ff;}
-.card-actions button.del-btn:hover{border-color:#e05c5c;color:#e07070;background:#1a0f0f;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a22;border:1px solid #2a2a35;border-radius:10px;padding:12px 20px;font-size:13px;color:#fff;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;}
-.toast.show{opacity:1;}
-.toast.ok{border-color:#1D9E75;color:#5DCAA5;}
-.toast.err{border-color:#e05c5c;color:#e07070;}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-bg.open{display:flex;}
-.modal{background:#1a1a22;border:1px solid #2a2a35;border-radius:16px;padding:28px;max-width:360px;width:100%;}
-.modal h2{font-size:16px;font-weight:600;margin-bottom:10px;}
-.modal p{font-size:13px;color:#888;margin-bottom:20px;}
-.modal-btns{display:flex;gap:10px;}
-.modal-btns button{flex:1;padding:11px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;border:none;}
-.modal-btns .cancel{background:#23232f;color:#aaa;}
-.modal-btns .confirm{background:#c0392b;color:#fff;}
-.admin-link{display:flex;align-items:center;gap:6px;font-size:13px;color:#9d97ff;cursor:pointer;padding:7px 12px;border-radius:8px;border:1px solid #3a3560;background:#1e1a3a;transition:all 0.2s;}
-.admin-link:hover{background:#2a2450;}
+:root {
+  --bg: #080810;
+  --surface: #0f0f1a;
+  --surface2: #14141f;
+  --border: #1e1e2e;
+  --border2: #252535;
+  --accent: #6c63ff;
+  --accent-glow: rgba(108,99,255,0.18);
+  --text: #e8e8f0;
+  --text2: #9090a8;
+  --text3: #55556a;
+  --red: #e05c5c;
+  --green: #4ade80;
+  --green2: #1D9E75;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* TOPBAR */
+.topbar {
+  background: rgba(15,15,26,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(108,99,255,0.3);
+  flex-shrink: 0;
+}
+.brand-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.2px;
+}
+.brand-name span { color: var(--accent); }
+.brand-sub {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.5px;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'DM Mono', monospace;
+  background: rgba(108,99,255,0.12);
+  color: #9d97ff;
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1px solid rgba(108,99,255,0.25);
+  letter-spacing: 0.5px;
+}
+.role-badge.admin-badge {
+  background: rgba(74,222,128,0.1);
+  color: #4ade80;
+  border-color: rgba(74,222,128,0.25);
+}
+.btn-sm {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  border-radius: 9px;
+  padding: 7px 15px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-sm:hover { border-color: var(--accent); color: var(--text); background: rgba(108,99,255,0.06); }
+.btn-sm.primary {
+  background: linear-gradient(135deg, var(--accent), #7c74ff);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 3px 14px rgba(108,99,255,0.3);
+}
+.btn-sm.primary:hover { opacity: 0.9; box-shadow: 0 4px 18px rgba(108,99,255,0.4); }
+.admin-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4ade80;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 9px;
+  border: 1px solid rgba(74,222,128,0.25);
+  background: rgba(74,222,128,0.07);
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
+}
+.admin-btn:hover { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); }
+
+/* MAIN */
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-family: 'DM Mono', monospace;
+}
+.stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+.stat-value.accent { color: var(--accent); }
+
+/* SECTION */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.section-meta {
+  font-size: 12px;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+}
+
+/* EMPTY */
+.empty {
+  text-align: center;
+  padding: 72px 20px;
+  color: var(--text3);
+  display: none;
+}
+.empty-icon { font-size: 44px; margin-bottom: 16px; display: block; opacity: 0.6; }
+.empty p { font-size: 15px; color: var(--text3); }
+.empty small { font-size: 13px; color: var(--text3); opacity: 0.6; margin-top: 6px; display: block; }
+
+/* CARDS GRID */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+}
+.card-item {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 20px;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  animation: fadeIn 0.4s ease both;
+}
+.card-item:hover {
+  border-color: rgba(108,99,255,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.card-avatar {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: rgba(108,99,255,0.12);
+  border: 1px solid rgba(108,99,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #9d97ff;
+  flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+}
+.card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.card-id {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 3px;
+  font-family: 'DM Mono', monospace;
+}
+.card-info {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-info::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green2);
+}
+.card-info span { color: var(--text2); }
+.card-creator {
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 14px;
+  font-family: 'DM Mono', monospace;
+}
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+.card-actions button {
+  flex: 1;
+  padding: 9px 8px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: none;
+  color: var(--text2);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.card-actions button:hover { background: var(--surface2); color: var(--text); }
+.card-actions .copy-btn:hover { border-color: rgba(108,99,255,0.5); color: #9d97ff; }
+.card-actions .edit-btn:hover { border-color: rgba(99,168,255,0.5); color: #63a8ff; }
+.card-actions .del-btn:hover { border-color: rgba(224,92,92,0.5); color: var(--red); background: rgba(224,92,92,0.06); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 12px 22px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.ok { border-color: rgba(74,222,128,0.4); color: #4ade80; }
+.toast.err { border-color: rgba(224,92,92,0.4); color: var(--red); }
+
+/* MODAL */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 380px;
+  width: 100%;
+  animation: scaleIn 0.25s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+@keyframes scaleIn {
+  from { opacity:0; transform: scale(0.93); }
+  to { opacity:1; transform: scale(1); }
+}
+.modal-icon {
+  width: 52px; height: 52px;
+  background: rgba(224,92,92,0.12);
+  border: 1px solid rgba(224,92,92,0.2);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+.modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.modal p { font-size: 14px; color: var(--text2); margin-bottom: 24px; line-height: 1.5; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btns button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+.modal-btns .cancel {
+  background: var(--surface2);
+  color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.modal-btns .cancel:hover { color: var(--text); }
+.modal-btns .confirm {
+  background: linear-gradient(135deg, #e05c5c, #cc4444);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(224,92,92,0.3);
+}
+.modal-btns .confirm:hover { opacity: 0.9; }
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .topbar { padding: 0 16px; height: 58px; }
+  .brand-sub { display: none; }
+  .topbar-right { gap: 7px; }
+  .btn-sm { padding: 7px 11px; font-size: 12px; }
+  .admin-btn { padding: 7px 11px; font-size: 12px; }
+  .main { padding: 20px 14px 60px; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .card-actions button { font-size: 11px; padding: 9px 6px; }
+}
 </style>
 </head>
 <body>
 <div class="topbar">
-  <div class="topbar-left">
-    <div class="topbar h1">m<span style="color:#6c63ff">Obywatel</span> &nbsp;<span style="color:#555;font-weight:400;font-size:14px">Panel</span></div>
+  <div class="topbar-brand">
+    <div class="brand-icon">🪪</div>
+    <div>
+      <div class="brand-name">m<span>Obywatel</span></div>
+      <div class="brand-sub">PANEL ZARZĄDZANIA</div>
+    </div>
   </div>
   <div class="topbar-right">
-    <span class="role-badge" id="role-badge">użytkownik</span>
-    <div class="admin-link" id="admin-link" style="display:none" onclick="location.href='/admin'">⚙ Admin</div>
+    <span class="role-badge" id="role-badge">UŻYTKOWNIK</span>
+    <div class="admin-btn" id="admin-link" style="display:none" onclick="location.href='/admin'">⚙ Admin</div>
     <button class="btn-sm primary" onclick="location.href='/generator'">+ Nowa karta</button>
     <button class="btn-sm" onclick="doLogout()">Wyloguj</button>
   </div>
 </div>
 
 <div class="main">
+  <div class="stats-bar" id="stats-bar" style="display:none">
+    <div class="stat-card">
+      <div class="stat-label">Wszystkie karty</div>
+      <div class="stat-value accent" id="stat-total">0</div>
+    </div>
+    <div class="stat-card" id="stat-limit-card" style="display:none">
+      <div class="stat-label">Limit kart</div>
+      <div class="stat-value" id="stat-limit">∞</div>
+    </div>
+  </div>
+
   <div class="section-header">
     <div>
       <span class="section-title">Wygenerowane karty</span>
-      <span class="section-count" id="count"></span>
+      <span class="section-meta" id="count" style="margin-left:8px"></span>
     </div>
   </div>
-  <div id="empty" class="empty" style="display:none">
-    <i>🪪</i>
-    <p>Brak kart. Kliknij „+ Nowa karta" żeby dodać pierwszą.</p>
+  <div id="empty" class="empty">
+    <span class="empty-icon">🪪</span>
+    <p>Brak kart w systemie</p>
+    <small>Kliknij „+ Nowa karta" żeby dodać pierwszą</small>
   </div>
   <div class="cards-grid" id="grid"></div>
 </div>
@@ -89,11 +471,12 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
 
 <div class="modal-bg" id="modal">
   <div class="modal">
+    <div class="modal-icon">🗑</div>
     <h2>Usuń kartę</h2>
-    <p>Jesteś pewien że chcesz usunąć tę kartę? Tej operacji nie można cofnąć.</p>
+    <p>Jesteś pewien? Ta operacja jest nieodwracalna i spowoduje trwałe usunięcie karty.</p>
     <div class="modal-btns">
       <button class="cancel" onclick="closeModal()">Anuluj</button>
-      <button class="confirm" onclick="confirmDelete()">Usuń</button>
+      <button class="confirm" onclick="confirmDelete()">Usuń kartę</button>
     </div>
   </div>
 </div>
@@ -107,6 +490,11 @@ if (!session) { location.href = '/login'; }
 fetch('/api/me',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session})})
 .then(r=>r.json()).then(d=>{
   if(!d.ok){localStorage.removeItem('session');location.href='/login';}
+  // Show limit info if applicable
+  if(d.cardLimit !== null){
+    document.getElementById('stat-limit-card').style.display='flex';
+    document.getElementById('stat-limit').textContent = d.cardLimit;
+  }
 });
 
 fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session})})
@@ -114,25 +502,40 @@ fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json','x-
   if(!d.ok){location.href='/login';return;}
   if(d.isAdmin){
     document.getElementById('admin-link').style.display='flex';
-    document.getElementById('role-badge').textContent='admin';
+    var badge = document.getElementById('role-badge');
+    badge.textContent='ADMIN';
+    badge.classList.add('admin-badge');
   }
+  document.getElementById('stats-bar').style.display='grid';
+  document.getElementById('stat-total').textContent = d.cards.length;
   document.getElementById('count').textContent = '(' + d.cards.length + ')';
-  if(d.cards.length===0){document.getElementById('empty').style.display='block';return;}
+
+  if(d.cards.length===0){
+    document.getElementById('empty').style.display='block';
+    return;
+  }
+
   var grid = document.getElementById('grid');
-  d.cards.forEach(c=>{
+  d.cards.forEach((c, i) => {
     var initials = ((c.name||'?')[0]+(c.surname||'?')[0]).toUpperCase();
     var dob = pad(c.day)+'.'+pad(c.month)+'.'+c.year;
     var el = document.createElement('div');
-    el.className='card-item'; el.id='card-'+c.id;
+    el.className='card-item';
+    el.id='card-'+c.id;
+    el.style.animationDelay = (i*0.05)+'s';
+    var creatorHtml = (d.isAdmin && c.createdByLogin)
+      ? '<div class="card-creator">👤 ' + esc(c.createdByLogin) + '</div>'
+      : '';
     el.innerHTML=
       '<div class="card-top">'+
       '<div class="card-avatar">'+initials+'</div>'+
       '<div><div class="card-name">'+esc(c.name)+' '+esc(c.surname)+'</div>'+
-      '<div class="card-id">ID #'+c.id+'</div></div>'+
+      '<div class="card-id">#'+String(c.id).padStart(4,'0')+'</div></div>'+
       '</div>'+
+      creatorHtml +
       '<div class="card-info">Data ur.: <span>'+dob+'</span></div>'+
       '<div class="card-actions">'+
-      '<button class="copy-btn" onclick="copyLink(\''+c.token+'\')">📋 Kopiuj link</button>'+
+      '<button class="copy-btn" onclick="copyLink(\''+c.token+'\')">📋 Link</button>'+
       '<button class="edit-btn" onclick="location.href=\'/generator?id='+c.id+'\'">✏ Edytuj</button>'+
       '<button class="del-btn" onclick="askDelete('+c.id+')">🗑 Usuń</button>'+
       '</div>';
@@ -155,8 +558,13 @@ function confirmDelete(){
   if(!deleteId)return;
   fetch('/api/delete-card',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session,id:deleteId})})
   .then(r=>r.json()).then(d=>{
-    if(d.ok){var el=document.getElementById('card-'+deleteId);if(el)el.remove();toast('Karta usunięta','ok');}
-    else toast('Błąd usuwania','err');
+    if(d.ok){
+      var el=document.getElementById('card-'+deleteId);
+      if(el){el.style.transition='all 0.3s';el.style.opacity='0';el.style.transform='scale(0.9)';setTimeout(()=>el.remove(),300);}
+      var cur = parseInt(document.getElementById('stat-total').textContent);
+      document.getElementById('stat-total').textContent = cur - 1;
+      toast('Karta usunięta','ok');
+    } else toast('Błąd usuwania','err');
     closeModal();
   });
 }

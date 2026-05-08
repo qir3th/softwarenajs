@@ -3,33 +3,205 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Logowanie</title>
+<title>Logowanie — mObywatel Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{min-height:100vh;background:#0f0f13;display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',Arial,sans-serif;padding:20px;}
-.card{background:#1a1a22;border:1px solid #2a2a35;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;}
-.logo{text-align:center;margin-bottom:32px;}
-.logo h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:1px;}
-.logo span{color:#6c63ff;}
-.logo p{font-size:13px;color:#666;margin-top:6px;}
-.field{margin-bottom:18px;}
-.field label{display:block;font-size:13px;color:#aaa;margin-bottom:7px;font-weight:500;}
-.field input{width:100%;background:#111118;border:1.5px solid #2a2a35;border-radius:10px;padding:13px 15px;font-size:15px;color:#fff;outline:none;transition:border-color 0.2s;}
-.field input:focus{border-color:#6c63ff;}
-.field input.err{border-color:#e05c5c;}
-.btn{width:100%;background:#6c63ff;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:background 0.2s;}
-.btn:hover{background:#5a52e0;}
-.btn:active{background:#4a43cc;}
-.btn:disabled{background:#3a3550;cursor:not-allowed;}
-.error{background:#2a1515;border:1px solid #5c2020;border-radius:10px;padding:12px 15px;font-size:13px;color:#e07070;margin-bottom:16px;display:none;}
-.error.show{display:block;}
+:root {
+  --bg: #080810;
+  --surface: #0f0f1a;
+  --surface2: #14141f;
+  --border: #1e1e2e;
+  --border2: #252535;
+  --accent: #6c63ff;
+  --accent2: #5a52e0;
+  --accent3: #4a43cc;
+  --accent-glow: rgba(108,99,255,0.18);
+  --text: #e8e8f0;
+  --text2: #9090a8;
+  --text3: #55556a;
+  --red: #e05c5c;
+  --red-bg: rgba(224,92,92,0.1);
+  --green: #4ade80;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+/* Background grid */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+/* Glow blob */
+body::after {
+  content:'';
+  position:fixed;
+  top:-20%; left:50%;
+  transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse at center, rgba(108,99,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 44px 40px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(108,99,255,0.06), 0 32px 80px rgba(0,0,0,0.6);
+  animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(24px); }
+  to { opacity:1; transform: translateY(0); }
+}
+.logo {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  border-radius: 14px;
+  font-size: 22px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 24px rgba(108,99,255,0.35);
+}
+.logo h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+.logo h1 span { color: var(--accent); }
+.logo p {
+  font-size: 13px;
+  color: var(--text3);
+  margin-top: 5px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.5px;
+}
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text3);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.field input {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  padding: 13px 16px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.field input.err {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(224,92,92,0.1);
+}
+.field input::placeholder { color: var(--text3); }
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), #7c74ff);
+  color: #fff;
+  border: none;
+  border-radius: 11px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(108,99,255,0.3);
+  letter-spacing: 0.2px;
+}
+.btn:hover { opacity: 0.9; box-shadow: 0 6px 28px rgba(108,99,255,0.4); }
+.btn:active { transform: scale(0.99); }
+.btn:disabled {
+  background: var(--surface2);
+  box-shadow: none;
+  cursor: not-allowed;
+  color: var(--text3);
+}
+.error {
+  background: var(--red-bg);
+  border: 1px solid rgba(224,92,92,0.3);
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 13px;
+  color: #f08080;
+  margin-bottom: 18px;
+  display: none;
+  animation: shake 0.3s ease;
+}
+.error.show { display: block; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}
+.footer-text {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+}
+/* Loading spinner in btn */
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 <div class="card">
   <div class="logo">
+    <div class="logo-mark">🪪</div>
     <h1>m<span>Obywatel</span></h1>
-    <p>Panel zarządzania</p>
+    <p>PANEL ZARZĄDZANIA</p>
   </div>
   <div class="error" id="err"></div>
   <div class="field">
@@ -38,9 +210,11 @@ body{min-height:100vh;background:#0f0f13;display:flex;align-items:center;justify
   </div>
   <div class="field">
     <label>Hasło</label>
-    <input type="password" id="password" placeholder="Wpisz hasło" autocomplete="current-password">
+    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
   </div>
   <button class="btn" id="btn" onclick="doLogin()">Zaloguj się</button>
+  <div class="divider"></div>
+  <div class="footer-text">Bezpieczne połączenie · SSL</div>
 </div>
 <script>
 var loginInput = document.getElementById('login');
@@ -48,7 +222,6 @@ var passInput = document.getElementById('password');
 var errBox = document.getElementById('err');
 var btn = document.getElementById('btn');
 
-// Already logged in?
 var sess = localStorage.getItem('session');
 if (sess) {
   fetch('/api/me', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:sess})})
@@ -66,11 +239,11 @@ function doLogin(){
   if(!login){loginInput.classList.add('err');return;}
   if(!pass){passInput.classList.add('err');return;}
   btn.disabled = true;
-  btn.textContent = 'Logowanie...';
+  btn.innerHTML = '<span class="spinner"></span>Logowanie...';
   fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login,password:pass})})
   .then(r=>r.json())
   .then(d=>{
-    btn.disabled=false; btn.textContent='Zaloguj się';
+    btn.disabled=false; btn.innerHTML='Zaloguj się';
     if(d.ok){
       localStorage.setItem('session', d.token);
       localStorage.setItem('role', d.role);
@@ -80,7 +253,7 @@ function doLogin(){
       errBox.classList.add('show');
     }
   })
-  .catch(()=>{btn.disabled=false;btn.textContent='Zaloguj się';errBox.textContent='Błąd połączenia z serwerem';errBox.classList.add('show');});
+  .catch(()=>{btn.disabled=false;btn.innerHTML='Zaloguj się';errBox.textContent='Błąd połączenia z serwerem';errBox.classList.add('show');});
 }
 </script>
 </body>

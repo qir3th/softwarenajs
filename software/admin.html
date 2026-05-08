@@ -3,67 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel Admina</title>
+<title>Panel Admina — mObywatel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;}
-.topbar{background:#1a1a22;border-bottom:1px solid #2a2a35;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
-.topbar-title{font-size:17px;font-weight:700;color:#fff;}
-.topbar-title span{color:#6c63ff;}
-.topbar-right{display:flex;gap:10px;}
-.btn-sm{background:none;border:1px solid #2a2a35;color:#aaa;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;transition:all 0.2s;}
-.btn-sm:hover{border-color:#6c63ff;color:#fff;}
-.btn-sm.primary{background:#6c63ff;border-color:#6c63ff;color:#fff;}
-.btn-sm.primary:hover{background:#5a52e0;}
-.main{max-width:800px;margin:0 auto;padding:24px 16px;}
-.section{background:#1a1a22;border:1px solid #2a2a35;border-radius:14px;margin-bottom:20px;overflow:hidden;}
-.section-head{padding:16px 20px;border-bottom:1px solid #2a2a35;display:flex;align-items:center;justify-content:space-between;}
-.section-head h2{font-size:15px;font-weight:600;}
-.add-form{padding:16px 20px;border-bottom:1px solid #2a2a35;display:none;}
-.add-form.open{display:block;}
-.form-row{display:flex;gap:10px;flex-wrap:wrap;}
-.form-row input{flex:1;min-width:140px;background:#111118;border:1.5px solid #2a2a35;border-radius:8px;padding:10px 13px;font-size:14px;color:#fff;outline:none;}
-.form-row input:focus{border-color:#6c63ff;}
-.form-row button{background:#6c63ff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;}
-.form-row button:hover{background:#5a52e0;}
-.user-list{padding:0;}
-.user-item{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #1f1f2a;gap:12px;}
-.user-item:last-child{border-bottom:none;}
-.user-left{display:flex;align-items:center;gap:12px;}
-.user-avatar{width:36px;height:36px;border-radius:50%;background:#1e1a3a;border:1px solid #3a3560;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#9d97ff;flex-shrink:0;}
-.user-avatar.admin-av{background:#1a2a1a;border-color:#1D9E75;color:#5DCAA5;}
-.user-login{font-size:14px;font-weight:500;color:#fff;}
-.user-meta{font-size:11px;color:#555;margin-top:2px;}
-.user-right{display:flex;gap:8px;flex-wrap:wrap;}
-.badge{font-size:11px;padding:3px 9px;border-radius:20px;}
-.badge.admin{background:#1a2a1a;color:#5DCAA5;border:1px solid #1D9E75;}
-.badge.user{background:#1e1a3a;color:#9d97ff;border:1px solid #3a3560;}
-.icon-btn{background:none;border:1px solid #2a2a35;border-radius:7px;padding:6px 10px;font-size:12px;color:#aaa;cursor:pointer;transition:all 0.2s;}
-.icon-btn:hover{background:#23232f;}
-.icon-btn.del:hover{border-color:#e05c5c;color:#e07070;background:#1a0f0f;}
-.icon-btn.pwd:hover{border-color:#63a8ff;color:#63a8ff;}
-.empty-users{padding:30px;text-align:center;color:#555;font-size:14px;}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-bg.open{display:flex;}
-.modal{background:#1a1a22;border:1px solid #2a2a35;border-radius:16px;padding:28px;max-width:360px;width:100%;}
-.modal h2{font-size:16px;font-weight:600;margin-bottom:10px;}
-.modal p{font-size:13px;color:#888;margin-bottom:16px;}
-.modal input{width:100%;background:#111118;border:1.5px solid #2a2a35;border-radius:8px;padding:11px 13px;font-size:14px;color:#fff;outline:none;margin-bottom:16px;}
-.modal input:focus{border-color:#6c63ff;}
-.modal-btns{display:flex;gap:10px;}
-.modal-btns button{flex:1;padding:11px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;border:none;}
-.modal-btns .cancel{background:#23232f;color:#aaa;}
-.modal-btns .confirm{background:#c0392b;color:#fff;}
-.modal-btns .save{background:#6c63ff;color:#fff;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a22;border:1px solid #2a2a35;border-radius:10px;padding:12px 20px;font-size:13px;color:#fff;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;}
-.toast.show{opacity:1;}
-.toast.ok{border-color:#1D9E75;color:#5DCAA5;}
-.toast.err{border-color:#e05c5c;color:#e07070;}
+:root {
+  --bg: #080810;
+  --surface: #0f0f1a;
+  --surface2: #14141f;
+  --border: #1e1e2e;
+  --border2: #252535;
+  --accent: #6c63ff;
+  --accent-glow: rgba(108,99,255,0.18);
+  --text: #e8e8f0;
+  --text2: #9090a8;
+  --text3: #55556a;
+  --red: #e05c5c;
+  --green: #4ade80;
+  --green2: #1D9E75;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* TOPBAR */
+.topbar {
+  background: rgba(15,15,26,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-brand { display:flex; align-items:center; gap:10px; }
+.brand-icon {
+  width:34px; height:34px;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+  box-shadow: 0 4px 12px rgba(108,99,255,0.3);
+}
+.brand-name { font-size:17px; font-weight:700; color:var(--text); }
+.brand-name span { color: var(--accent); }
+.brand-sub { font-size:11px; color:var(--text3); font-family:'DM Mono',monospace; }
+.topbar-right { display:flex; gap:10px; }
+.btn-sm {
+  background:none; border:1px solid var(--border2); color:var(--text2);
+  border-radius:9px; padding:7px 15px; font-size:13px;
+  font-family:'DM Sans',sans-serif; cursor:pointer; transition:all 0.2s;
+}
+.btn-sm:hover { border-color:var(--accent); color:var(--text); background:rgba(108,99,255,0.06); }
+.btn-sm.primary {
+  background:linear-gradient(135deg, var(--accent), #7c74ff);
+  border-color:transparent; color:#fff; font-weight:600;
+  box-shadow: 0 3px 14px rgba(108,99,255,0.3);
+}
+.btn-sm.primary:hover { opacity:0.9; }
+
+/* MAIN */
+.main { max-width:860px; margin:0 auto; padding:32px 20px 80px; position:relative; z-index:1; }
+
+/* SECTION */
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 18px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.section-head {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.section-head h2 {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-head-meta { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+/* ADD FORM */
+.add-form {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: none;
+  animation: slideDown 0.25s ease;
+}
+.add-form.open { display: block; }
+@keyframes slideDown {
+  from { opacity:0; transform:translateY(-8px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.form-row { display:flex; gap:10px; flex-wrap:wrap; }
+.form-row input {
+  flex:1; min-width:140px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-row input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.form-row input::placeholder { color: var(--text3); }
+.form-row button {
+  background: linear-gradient(135deg, var(--accent), #7c74ff);
+  border: none;
+  border-radius: 10px;
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  box-shadow: 0 3px 12px rgba(108,99,255,0.3);
+}
+.form-row button:hover { opacity: 0.9; }
+
+/* USER LIST */
+.user-list { padding: 0; }
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  gap: 14px;
+  transition: background 0.15s;
+}
+.user-item:last-child { border-bottom: none; }
+.user-item:hover { background: rgba(255,255,255,0.015); }
+.user-left { display:flex; align-items:center; gap:13px; }
+.user-avatar {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: rgba(108,99,255,0.12);
+  border: 1px solid rgba(108,99,255,0.2);
+  display: flex; align-items:center; justify-content:center;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'DM Mono', monospace;
+  color: #9d97ff;
+  flex-shrink: 0;
+}
+.user-avatar.admin-av {
+  background: rgba(74,222,128,0.1);
+  border-color: rgba(74,222,128,0.25);
+  color: #4ade80;
+}
+.user-login { font-size: 14px; font-weight: 600; color: var(--text); }
+.user-meta { font-size: 11px; color: var(--text3); margin-top: 3px; font-family:'DM Mono',monospace; }
+.user-right { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'DM Mono', monospace;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+.badge.admin { background: rgba(74,222,128,0.1); color:#4ade80; border:1px solid rgba(74,222,128,0.25); }
+.badge.user { background: rgba(108,99,255,0.1); color:#9d97ff; border:1px solid rgba(108,99,255,0.2); }
+.badge.limit { background: rgba(251,191,36,0.1); color:#fbbf24; border:1px solid rgba(251,191,36,0.25); }
+.icon-btn {
+  background:none;
+  border:1px solid var(--border2);
+  border-radius:8px;
+  padding:6px 11px;
+  font-size:12px;
+  font-family:'DM Sans',sans-serif;
+  color:var(--text2);
+  cursor:pointer;
+  transition:all 0.2s;
+  white-space: nowrap;
+}
+.icon-btn:hover { background:var(--surface2); color:var(--text); }
+.icon-btn.del:hover { border-color:rgba(224,92,92,0.5); color:var(--red); background:rgba(224,92,92,0.06); }
+.icon-btn.pwd:hover { border-color:rgba(99,168,255,0.4); color:#63a8ff; }
+.icon-btn.perms:hover { border-color:rgba(251,191,36,0.4); color:#fbbf24; }
+.empty-users { padding:40px; text-align:center; color:var(--text3); font-size:14px; }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:28px; left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:12px; padding:12px 22px;
+  font-size:13px; font-weight:500;
+  color:var(--text); z-index:999;
+  opacity:0; transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+  pointer-events:none;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.ok { border-color:rgba(74,222,128,0.4); color:#4ade80; }
+.toast.err { border-color:rgba(224,92,92,0.4); color:var(--red); }
+
+/* MODALS */
+.modal-bg {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(4px);
+  z-index:100; display:none;
+  align-items:center; justify-content:center; padding:20px;
+}
+.modal-bg.open { display:flex; }
+.modal {
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:32px;
+  max-width:420px; width:100%;
+  animation:scaleIn 0.25s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:0 24px 64px rgba(0,0,0,0.6);
+}
+@keyframes scaleIn {
+  from { opacity:0; transform:scale(0.93); }
+  to { opacity:1; transform:scale(1); }
+}
+.modal-icon {
+  width:50px; height:50px;
+  border-radius:13px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; margin-bottom:16px;
+}
+.modal-icon.danger { background:rgba(224,92,92,0.12); border:1px solid rgba(224,92,92,0.2); }
+.modal-icon.warning { background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.2); }
+.modal-icon.info { background:rgba(108,99,255,0.12); border:1px solid rgba(108,99,255,0.2); }
+.modal h2 { font-size:18px; font-weight:700; margin-bottom:8px; }
+.modal p { font-size:14px; color:var(--text2); margin-bottom:22px; line-height:1.5; }
+.modal-field { margin-bottom:16px; }
+.modal-field label {
+  display:block; font-size:11px; font-weight:600;
+  color:var(--text3); margin-bottom:8px;
+  text-transform:uppercase; letter-spacing:0.8px;
+  font-family:'DM Mono',monospace;
+}
+.modal-field input, .modal-field select {
+  width:100%;
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:14px;
+  font-family:'DM Sans',sans-serif;
+  color:var(--text);
+  outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance:none;
+}
+.modal-field input:focus, .modal-field select:focus {
+  border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow);
+}
+.modal-field input::placeholder { color:var(--text3); }
+.modal-field select option { background:var(--surface); }
+
+/* Permissions toggles */
+.perms-grid {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+  margin-bottom:16px;
+}
+.perm-toggle {
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  padding:12px 10px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  user-select:none;
+}
+.perm-toggle.active {
+  border-color:rgba(74,222,128,0.4);
+  background:rgba(74,222,128,0.07);
+}
+.perm-toggle.active .perm-icon { filter:none; }
+.perm-icon { font-size:18px; display:block; margin-bottom:4px; }
+.perm-label { font-size:11px; color:var(--text3); font-weight:500; }
+.perm-toggle.active .perm-label { color:#4ade80; }
+
+.modal-btns { display:flex; gap:10px; margin-top:8px; }
+.modal-btns button {
+  flex:1; padding:12px; border-radius:11px;
+  font-size:14px; font-weight:600;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer; border:none; transition:all 0.2s;
+}
+.modal-btns .cancel {
+  background:var(--surface2); color:var(--text2);
+  border:1px solid var(--border2);
+}
+.modal-btns .cancel:hover { color:var(--text); }
+.modal-btns .confirm-del {
+  background:linear-gradient(135deg,#e05c5c,#cc4444);
+  color:#fff; box-shadow:0 4px 14px rgba(224,92,92,0.3);
+}
+.modal-btns .confirm-del:hover { opacity:0.9; }
+.modal-btns .save {
+  background:linear-gradient(135deg,var(--accent),#7c74ff);
+  color:#fff; box-shadow:0 4px 14px rgba(108,99,255,0.3);
+}
+.modal-btns .save:hover { opacity:0.9; }
+
+/* Responsive */
+@media (max-width:600px) {
+  .topbar { padding:0 16px; height:58px; }
+  .brand-sub { display:none; }
+  .main { padding:20px 14px 60px; }
+  .user-item { flex-direction:column; align-items:flex-start; gap:12px; }
+  .user-right { width:100%; }
+  .perms-grid { grid-template-columns:1fr 1fr 1fr; }
+  .modal { padding:24px; }
+}
 </style>
 </head>
 <body>
 <div class="topbar">
-  <div class="topbar-title">m<span>Obywatel</span> &nbsp;<span style="color:#555;font-weight:400;font-size:14px">Admin</span></div>
+  <div class="topbar-brand">
+    <div class="brand-icon">🪪</div>
+    <div>
+      <div class="brand-name">m<span>Obywatel</span></div>
+      <div class="brand-sub">PANEL ADMINA</div>
+    </div>
+  </div>
   <div class="topbar-right">
     <button class="btn-sm" onclick="location.href='/dashboard'">← Dashboard</button>
     <button class="btn-sm" onclick="doLogout()">Wyloguj</button>
@@ -73,7 +363,7 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
 <div class="main">
   <div class="section">
     <div class="section-head">
-      <h2>Użytkownicy</h2>
+      <h2>👥 Użytkownicy <span class="section-head-meta" id="user-count"></span></h2>
       <button class="btn-sm primary" onclick="toggleAddForm()">+ Dodaj użytkownika</button>
     </div>
     <div class="add-form" id="addForm">
@@ -84,32 +374,84 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
       </div>
     </div>
     <div class="user-list" id="userList">
-      <div class="empty-users">Ładowanie...</div>
+      <div class="empty-users">Ładowanie użytkowników...</div>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- Delete modal -->
 <div class="modal-bg" id="delModal">
   <div class="modal">
+    <div class="modal-icon danger">🗑</div>
     <h2>Usuń użytkownika</h2>
-    <p>Jesteś pewien? Użytkownik straci dostęp do panelu.</p>
+    <p>Użytkownik straci dostęp do panelu. Jego karty pozostaną w systemie.</p>
     <div class="modal-btns">
       <button class="cancel" onclick="closeModals()">Anuluj</button>
-      <button class="confirm" onclick="confirmDelete()">Usuń</button>
+      <button class="confirm-del" onclick="confirmDelete()">Usuń użytkownika</button>
     </div>
   </div>
 </div>
 
+<!-- Password modal -->
 <div class="modal-bg" id="pwdModal">
   <div class="modal">
+    <div class="modal-icon info">🔑</div>
     <h2>Zmień hasło</h2>
-    <p>Wpisz nowe hasło dla użytkownika.</p>
-    <input type="password" id="newPwdInput" placeholder="Nowe hasło">
+    <p>Ustaw nowe hasło dla tego użytkownika.</p>
+    <div class="modal-field">
+      <label>Nowe hasło</label>
+      <input type="password" id="newPwdInput" placeholder="Wpisz nowe hasło">
+    </div>
     <div class="modal-btns">
       <button class="cancel" onclick="closeModals()">Anuluj</button>
-      <button class="save" onclick="confirmPwd()">Zapisz</button>
+      <button class="save" onclick="confirmPwd()">Zapisz hasło</button>
+    </div>
+  </div>
+</div>
+
+<!-- Permissions modal -->
+<div class="modal-bg" id="permsModal">
+  <div class="modal">
+    <div class="modal-icon warning">⚙️</div>
+    <h2>Uprawnienia i ustawienia</h2>
+    <p style="margin-bottom:16px">Zarządzaj uprawnieniami i limitami dla tego użytkownika.</p>
+
+    <div class="modal-field">
+      <label>Rola</label>
+      <select id="permsRole">
+        <option value="user">Użytkownik</option>
+        <option value="admin">Administrator</option>
+      </select>
+    </div>
+
+    <div class="modal-field">
+      <label>Limit kart (puste = brak limitu)</label>
+      <input type="number" id="permsLimit" placeholder="np. 10" min="0">
+    </div>
+
+    <div class="modal-field">
+      <label>Uprawnienia</label>
+      <div class="perms-grid">
+        <div class="perm-toggle active" id="perm-create" onclick="togglePerm('create')">
+          <span class="perm-icon">➕</span>
+          <span class="perm-label">Tworzenie</span>
+        </div>
+        <div class="perm-toggle active" id="perm-edit" onclick="togglePerm('edit')">
+          <span class="perm-icon">✏️</span>
+          <span class="perm-label">Edycja</span>
+        </div>
+        <div class="perm-toggle active" id="perm-delete" onclick="togglePerm('delete')">
+          <span class="perm-icon">🗑️</span>
+          <span class="perm-label">Usuwanie</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-btns">
+      <button class="cancel" onclick="closeModals()">Anuluj</button>
+      <button class="save" onclick="savePerms()">Zapisz zmiany</button>
     </div>
   </div>
 </div>
@@ -118,6 +460,7 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
 var session = localStorage.getItem('session');
 var deleteUserId = null;
 var pwdUserId = null;
+var permsUserId = null;
 
 if (!session) { location.href = '/login'; }
 
@@ -131,19 +474,34 @@ function loadUsers(){
   fetch('/api/users',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session})})
   .then(r=>r.json()).then(d=>{
     if(!d.ok){toast('Błąd ładowania','err');return;}
+    document.getElementById('user-count').textContent = d.users.length + ' użytkowników';
     var list = document.getElementById('userList');
     if(d.users.length===0){list.innerHTML='<div class="empty-users">Brak użytkowników.</div>';return;}
     list.innerHTML = d.users.map(u=>{
       var isAdmin = u.role==='admin';
       var initials = (u.login[0]||'?').toUpperCase();
       var date = u.createdAt ? new Date(u.createdAt).toLocaleDateString('pl-PL') : '';
+      var limitBadge = (u.cardLimit !== null && u.cardLimit !== undefined)
+        ? '<span class="badge limit">limit: '+u.cardLimit+'</span>' : '';
+      var perms = u.permissions || {canCreate:true,canEdit:true,canDelete:true};
+      var permsStr = [
+        perms.canCreate?'➕':'',
+        perms.canEdit?'✏️':'',
+        perms.canDelete?'🗑️':''
+      ].filter(Boolean).join(' ');
+
       return '<div class="user-item">'+
         '<div class="user-left">'+
         '<div class="user-avatar '+(isAdmin?'admin-av':'')+'">'+initials+'</div>'+
-        '<div><div class="user-login">'+esc(u.login)+'</div><div class="user-meta">'+(date?'dodano '+date:'')+'</div></div>'+
+        '<div>'+
+          '<div class="user-login">'+esc(u.login)+'</div>'+
+          '<div class="user-meta">'+(date?'od '+date+' · ':'')+u.cardCount+' kart · '+permsStr+'</div>'+
+        '</div>'+
         '</div>'+
         '<div class="user-right">'+
-        '<span class="badge '+(isAdmin?'admin':'user')+'">'+(isAdmin?'admin':'użytkownik')+'</span>'+
+        '<span class="badge '+(isAdmin?'admin':'user')+'">'+(isAdmin?'ADMIN':'USER')+'</span>'+
+        limitBadge+
+        '<button class="icon-btn perms" onclick="askPerms('+u.id+',\''+esc(u.role)+'\','+(u.cardLimit!==null?u.cardLimit:'null')+','+JSON.stringify(perms)+')">⚙ Upr.</button>'+
         '<button class="icon-btn pwd" onclick="askPwd('+u.id+')">🔑 Hasło</button>'+
         (isAdmin?'':'<button class="icon-btn del" onclick="askDel('+u.id+')">🗑 Usuń</button>')+
         '</div>'+
@@ -155,8 +513,7 @@ function loadUsers(){
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
 function toggleAddForm(){
-  var f = document.getElementById('addForm');
-  f.classList.toggle('open');
+  document.getElementById('addForm').classList.toggle('open');
 }
 
 function addUser(){
@@ -177,7 +534,27 @@ function addUser(){
 
 function askDel(id){deleteUserId=id;document.getElementById('delModal').classList.add('open');}
 function askPwd(id){pwdUserId=id;document.getElementById('newPwdInput').value='';document.getElementById('pwdModal').classList.add('open');}
-function closeModals(){document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open'));deleteUserId=null;pwdUserId=null;}
+
+function askPerms(id, role, cardLimit, perms){
+  permsUserId=id;
+  document.getElementById('permsRole').value = role;
+  document.getElementById('permsLimit').value = (cardLimit!==null&&cardLimit!==undefined) ? cardLimit : '';
+  setPermToggle('create', perms.canCreate!==false);
+  setPermToggle('edit', perms.canEdit!==false);
+  setPermToggle('delete', perms.canDelete!==false);
+  document.getElementById('permsModal').classList.add('open');
+}
+
+function setPermToggle(name, val){
+  var el = document.getElementById('perm-'+name);
+  if(val) el.classList.add('active'); else el.classList.remove('active');
+}
+function togglePerm(name){
+  var el = document.getElementById('perm-'+name);
+  el.classList.toggle('active');
+}
+
+function closeModals(){document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open'));deleteUserId=null;pwdUserId=null;permsUserId=null;}
 
 function confirmDelete(){
   if(!deleteUserId)return;
@@ -201,6 +578,24 @@ function confirmPwd(){
   });
 }
 
+function savePerms(){
+  if(!permsUserId)return;
+  var role = document.getElementById('permsRole').value;
+  var limitVal = document.getElementById('permsLimit').value;
+  var cardLimit = limitVal==='' ? null : parseInt(limitVal);
+  var permissions = {
+    canCreate: document.getElementById('perm-create').classList.contains('active'),
+    canEdit: document.getElementById('perm-edit').classList.contains('active'),
+    canDelete: document.getElementById('perm-delete').classList.contains('active')
+  };
+  fetch('/api/users/permissions',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session,id:permsUserId,role,cardLimit,permissions})})
+  .then(r=>r.json()).then(d=>{
+    if(d.ok){toast('Zapisano uprawnienia','ok');loadUsers();}
+    else toast(d.error||'Błąd','err');
+    closeModals();
+  });
+}
+
 function doLogout(){
   fetch('/api/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session})});
   localStorage.removeItem('session');localStorage.removeItem('role');location.href='/login';
@@ -208,7 +603,7 @@ function doLogout(){
 
 function toast(msg,type){
   var t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast show '+(type||'');
+  t.textContent=msg; t.className='toast show '+(type||'');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 </script>
