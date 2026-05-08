@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Panel Admina — mObywatel</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -27,6 +27,7 @@ body {
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 body::before {
   content:'';
@@ -40,11 +41,11 @@ body::before {
 
 /* TOPBAR */
 .topbar {
-  background: rgba(15,15,26,0.85);
+  background: rgba(15,15,26,0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  height: 62px;
+  padding: 0 16px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,15 +59,17 @@ body::before {
   display:flex; align-items:center; justify-content:center;
   font-size:16px;
   box-shadow: 0 4px 12px rgba(108,99,255,0.3);
+  flex-shrink: 0;
 }
-.brand-name { font-size:17px; font-weight:700; color:var(--text); }
+.brand-name { font-size:16px; font-weight:700; color:var(--text); }
 .brand-name span { color: var(--accent); }
-.brand-sub { font-size:11px; color:var(--text3); font-family:'DM Mono',monospace; }
-.topbar-right { display:flex; gap:10px; }
+.brand-sub { font-size:11px; color:var(--text3); font-family:'DM Mono',monospace; display:block; }
+.topbar-right { display:flex; gap:8px; }
 .btn-sm {
   background:none; border:1px solid var(--border2); color:var(--text2);
-  border-radius:9px; padding:7px 15px; font-size:13px;
+  border-radius:9px; padding:8px 14px; font-size:13px;
   font-family:'DM Sans',sans-serif; cursor:pointer; transition:all 0.2s;
+  white-space: nowrap;
 }
 .btn-sm:hover { border-color:var(--accent); color:var(--text); background:rgba(108,99,255,0.06); }
 .btn-sm.primary {
@@ -77,26 +80,27 @@ body::before {
 .btn-sm.primary:hover { opacity:0.9; }
 
 /* MAIN */
-.main { max-width:860px; margin:0 auto; padding:32px 20px 80px; position:relative; z-index:1; }
+.main { max-width:860px; margin:0 auto; padding:24px 16px 80px; position:relative; z-index:1; }
 
 /* SECTION */
 .section {
   background: var(--surface);
   border: 1px solid var(--border2);
-  border-radius: 18px;
-  margin-bottom: 20px;
+  border-radius: 16px;
+  margin-bottom: 16px;
   overflow: hidden;
 }
 .section-head {
-  padding: 18px 22px;
+  padding: 16px 18px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
 }
 .section-head h2 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -106,7 +110,7 @@ body::before {
 
 /* ADD FORM */
 .add-form {
-  padding: 18px 22px;
+  padding: 16px 18px;
   border-bottom: 1px solid var(--border);
   display: none;
   animation: slideDown 0.25s ease;
@@ -118,16 +122,17 @@ body::before {
 }
 .form-row { display:flex; gap:10px; flex-wrap:wrap; }
 .form-row input {
-  flex:1; min-width:140px;
+  flex:1; min-width:120px;
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 10px;
-  padding: 11px 14px;
+  padding: 12px 14px;
   font-size: 14px;
   font-family: 'DM Sans', sans-serif;
   color: var(--text);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
 }
 .form-row input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
 .form-row input::placeholder { color: var(--text3); }
@@ -135,7 +140,7 @@ body::before {
   background: linear-gradient(135deg, var(--accent), #7c74ff);
   border: none;
   border-radius: 10px;
-  padding: 11px 20px;
+  padding: 12px 18px;
   font-size: 14px;
   font-weight: 600;
   font-family: 'DM Sans', sans-serif;
@@ -143,6 +148,7 @@ body::before {
   cursor: pointer;
   transition: opacity 0.2s;
   box-shadow: 0 3px 12px rgba(108,99,255,0.3);
+  min-height: 46px;
 }
 .form-row button:hover { opacity: 0.9; }
 
@@ -152,21 +158,21 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 22px;
+  padding: 14px 18px;
   border-bottom: 1px solid var(--border);
-  gap: 14px;
+  gap: 12px;
   transition: background 0.15s;
 }
 .user-item:last-child { border-bottom: none; }
 .user-item:hover { background: rgba(255,255,255,0.015); }
-.user-left { display:flex; align-items:center; gap:13px; }
+.user-left { display:flex; align-items:center; gap:12px; flex:1; min-width: 0; }
 .user-avatar {
   width: 40px; height: 40px;
-  border-radius: 12px;
+  border-radius: 10px;
   background: rgba(108,99,255,0.12);
   border: 1px solid rgba(108,99,255,0.2);
   display: flex; align-items:center; justify-content:center;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   font-family: 'DM Mono', monospace;
   color: #9d97ff;
@@ -177,16 +183,18 @@ body::before {
   border-color: rgba(74,222,128,0.25);
   color: #4ade80;
 }
-.user-login { font-size: 14px; font-weight: 600; color: var(--text); }
-.user-meta { font-size: 11px; color: var(--text3); margin-top: 3px; font-family:'DM Mono',monospace; }
-.user-right { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.user-info { flex:1; min-width: 0; }
+.user-login { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-meta { font-size: 11px; color: var(--text3); margin-top: 3px; font-family:'DM Mono',monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-right { display:flex; gap:6px; flex-wrap:wrap; align-items:center; flex-shrink: 0; }
 .badge {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   font-family: 'DM Mono', monospace;
-  padding: 3px 10px;
+  padding: 4px 8px;
   border-radius: 20px;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 .badge.admin { background: rgba(74,222,128,0.1); color:#4ade80; border:1px solid rgba(74,222,128,0.25); }
 .badge.user { background: rgba(108,99,255,0.1); color:#9d97ff; border:1px solid rgba(108,99,255,0.2); }
@@ -195,8 +203,8 @@ body::before {
   background:none;
   border:1px solid var(--border2);
   border-radius:8px;
-  padding:6px 11px;
-  font-size:12px;
+  padding:7px 10px;
+  font-size:11px;
   font-family:'DM Sans',sans-serif;
   color:var(--text2);
   cursor:pointer;
@@ -207,21 +215,23 @@ body::before {
 .icon-btn.del:hover { border-color:rgba(224,92,92,0.5); color:var(--red); background:rgba(224,92,92,0.06); }
 .icon-btn.pwd:hover { border-color:rgba(99,168,255,0.4); color:#63a8ff; }
 .icon-btn.perms:hover { border-color:rgba(251,191,36,0.4); color:#fbbf24; }
-.empty-users { padding:40px; text-align:center; color:var(--text3); font-size:14px; }
+.empty-users { padding:32px; text-align:center; color:var(--text3); font-size:14px; }
 
 /* TOAST */
 .toast {
-  position:fixed; bottom:28px; left:50%;
+  position:fixed; bottom:20px; left:50%;
   transform:translateX(-50%) translateY(80px);
   background:var(--surface2);
   border:1px solid var(--border2);
-  border-radius:12px; padding:12px 22px;
+  border-radius:12px; padding:12px 20px;
   font-size:13px; font-weight:500;
   color:var(--text); z-index:999;
   opacity:0; transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
   pointer-events:none;
   box-shadow:0 8px 32px rgba(0,0,0,0.5);
   white-space: nowrap;
+  max-width: calc(100% - 32px);
+  text-align: center;
 }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 .toast.ok { border-color:rgba(74,222,128,0.4); color:#4ade80; }
@@ -230,37 +240,39 @@ body::before {
 /* MODALS */
 .modal-bg {
   position:fixed; inset:0;
-  background:rgba(0,0,0,0.75);
+  background:rgba(0,0,0,0.8);
   backdrop-filter:blur(4px);
   z-index:100; display:none;
-  align-items:center; justify-content:center; padding:20px;
+  align-items:center; justify-content:center; padding:16px;
 }
 .modal-bg.open { display:flex; }
 .modal {
   background:var(--surface);
   border:1px solid var(--border2);
-  border-radius:20px;
-  padding:32px;
-  max-width:420px; width:100%;
+  border-radius:16px;
+  padding:24px;
+  max-width:400px; width:100%;
   animation:scaleIn 0.25s cubic-bezier(0.16,1,0.3,1);
   box-shadow:0 24px 64px rgba(0,0,0,0.6);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 @keyframes scaleIn {
   from { opacity:0; transform:scale(0.93); }
   to { opacity:1; transform:scale(1); }
 }
 .modal-icon {
-  width:50px; height:50px;
-  border-radius:13px;
+  width:48px; height:48px;
+  border-radius:12px;
   display:flex; align-items:center; justify-content:center;
-  font-size:22px; margin-bottom:16px;
+  font-size:20px; margin-bottom:14px;
 }
 .modal-icon.danger { background:rgba(224,92,92,0.12); border:1px solid rgba(224,92,92,0.2); }
 .modal-icon.warning { background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.2); }
 .modal-icon.info { background:rgba(108,99,255,0.12); border:1px solid rgba(108,99,255,0.2); }
-.modal h2 { font-size:18px; font-weight:700; margin-bottom:8px; }
-.modal p { font-size:14px; color:var(--text2); margin-bottom:22px; line-height:1.5; }
-.modal-field { margin-bottom:16px; }
+.modal h2 { font-size:17px; font-weight:700; margin-bottom:8px; }
+.modal p { font-size:13px; color:var(--text2); margin-bottom:20px; line-height:1.5; }
+.modal-field { margin-bottom:14px; }
 .modal-field label {
   display:block; font-size:11px; font-weight:600;
   color:var(--text3); margin-bottom:8px;
@@ -273,12 +285,13 @@ body::before {
   border:1.5px solid var(--border);
   border-radius:10px;
   padding:12px 14px;
-  font-size:14px;
-  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  font-family:'DM Sans', sans-serif;
   color:var(--text);
   outline:none;
   transition:border-color 0.2s, box-shadow 0.2s;
   -webkit-appearance:none;
+  -webkit-border-radius:10px;
 }
 .modal-field input:focus, .modal-field select:focus {
   border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow);
@@ -288,14 +301,14 @@ body::before {
 
 /* Permissions toggles */
 .perms-grid {
-  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
   margin-bottom:16px;
 }
 .perm-toggle {
   background:var(--bg);
   border:1.5px solid var(--border);
   border-radius:10px;
-  padding:12px 10px;
+  padding:12px 8px;
   text-align:center;
   cursor:pointer;
   transition:all 0.2s;
@@ -305,17 +318,17 @@ body::before {
   border-color:rgba(74,222,128,0.4);
   background:rgba(74,222,128,0.07);
 }
-.perm-toggle.active .perm-icon { filter:none; }
 .perm-icon { font-size:18px; display:block; margin-bottom:4px; }
-.perm-label { font-size:11px; color:var(--text3); font-weight:500; }
+.perm-label { font-size:10px; color:var(--text3); font-weight:500; }
 .perm-toggle.active .perm-label { color:#4ade80; }
 
 .modal-btns { display:flex; gap:10px; margin-top:8px; }
 .modal-btns button {
-  flex:1; padding:12px; border-radius:11px;
+  flex:1; padding:12px; border-radius:10px;
   font-size:14px; font-weight:600;
   font-family:'DM Sans',sans-serif;
   cursor:pointer; border:none; transition:all 0.2s;
+  min-height: 46px;
 }
 .modal-btns .cancel {
   background:var(--surface2); color:var(--text2);
@@ -334,14 +347,90 @@ body::before {
 .modal-btns .save:hover { opacity:0.9; }
 
 /* Responsive */
-@media (max-width:600px) {
-  .topbar { padding:0 16px; height:58px; }
+@media (max-width: 600px) {
+  .topbar {
+    padding:0 12px;
+    height: 56px;
+    position: relative;
+  }
   .brand-sub { display:none; }
-  .main { padding:20px 14px 60px; }
-  .user-item { flex-direction:column; align-items:flex-start; gap:12px; }
-  .user-right { width:100%; }
-  .perms-grid { grid-template-columns:1fr 1fr 1fr; }
-  .modal { padding:24px; }
+  .brand-name { font-size: 15px; }
+  .brand-icon { width: 30px; height: 30px; font-size: 14px; }
+  .topbar-right { gap: 6px; }
+  .btn-sm {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+  .main { padding: 16px 12px 70px; }
+  .section { border-radius: 14px; margin-bottom: 14px; }
+  .section-head { padding: 14px 14px; }
+  .section-head h2 { font-size: 13px; }
+  .add-form { padding: 14px 14px; }
+  .form-row { gap: 8px; }
+  .form-row input {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+    padding: 12px 12px;
+    font-size: 14px;
+  }
+  .form-row button {
+    flex: 1 1 auto;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  .user-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .user-left { width: 100%; }
+  .user-right { width: 100%; justify-content: flex-start; }
+  .icon-btn {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 12px;
+    text-align: center;
+    justify-content: center;
+  }
+  .badge { font-size: 10px; padding: 4px 8px; }
+  .perms-grid { grid-template-columns:repeat(3, 1fr); gap: 6px; }
+  .perm-toggle { padding: 10px 6px; }
+  .perm-icon { font-size: 16px; }
+  .modal { padding: 20px 16px; border-radius: 14px; }
+  .modal-icon { width: 44px; height: 44px; font-size: 18px; }
+  .modal h2 { font-size: 16px; }
+  .modal p { font-size: 13px; margin-bottom: 16px; }
+  .modal-field input, .modal-field select { padding: 12px 12px; font-size: 15px; }
+  .modal-btns { gap: 8px; }
+  .modal-btns button { padding: 12px; font-size: 13px; min-height: 44px; }
+  .empty-users { padding: 24px; font-size: 13px; }
+  .toast {
+    bottom: 16px;
+    padding: 10px 16px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .topbar-right { flex-wrap: wrap; }
+  .user-info { min-width: 100px; }
+  .user-login, .user-meta { white-space: normal; }
+  .perms-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .form-row input { font-size: 13px; padding: 10px 10px; }
+}
+
+/* Touch optimizations */
+@media (pointer: coarse) {
+  .icon-btn, .btn-sm {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .form-row input {
+    min-height: 48px;
+  }
 }
 </style>
 </head>
@@ -364,7 +453,7 @@ body::before {
   <div class="section">
     <div class="section-head">
       <h2>👥 Użytkownicy <span class="section-head-meta" id="user-count"></span></h2>
-      <button class="btn-sm primary" onclick="toggleAddForm()">+ Dodaj użytkownika</button>
+      <button class="btn-sm primary" onclick="toggleAddForm()">+ Dodaj</button>
     </div>
     <div class="add-form" id="addForm">
       <div class="form-row">
@@ -402,7 +491,7 @@ body::before {
     <p>Użytkownik straci dostęp do panelu. Jego karty pozostaną w systemie.</p>
     <div class="modal-btns">
       <button class="cancel" onclick="closeModals()">Anuluj</button>
-      <button class="confirm-del" onclick="confirmDelete()">Usuń użytkownika</button>
+      <button class="confirm-del" onclick="confirmDelete()">Usuń</button>
     </div>
   </div>
 </div>
@@ -419,7 +508,7 @@ body::before {
     </div>
     <div class="modal-btns">
       <button class="cancel" onclick="closeModals()">Anuluj</button>
-      <button class="save" onclick="confirmPwd()">Zapisz hasło</button>
+      <button class="save" onclick="confirmPwd()">Zapisz</button>
     </div>
   </div>
 </div>
@@ -429,7 +518,7 @@ body::before {
   <div class="modal">
     <div class="modal-icon warning">⚙️</div>
     <h2>Uprawnienia i ustawienia</h2>
-    <p style="margin-bottom:16px">Zarządzaj uprawnieniami i limitami dla tego użytkownika.</p>
+    <p style="margin-bottom:14px">Zarządzaj uprawnieniami i limitami dla tego użytkownika.</p>
 
     <div class="modal-field">
       <label>Rola</label>
@@ -464,7 +553,7 @@ body::before {
 
     <div class="modal-btns">
       <button class="cancel" onclick="closeModals()">Anuluj</button>
-      <button class="save" onclick="savePerms()">Zapisz zmiany</button>
+      <button class="save" onclick="savePerms()">Zapisz</button>
     </div>
   </div>
 </div>
@@ -509,7 +598,7 @@ function loadUsers(){
       return '<div class="user-item">'+
         '<div class="user-left">'+
         '<div class="user-avatar '+(isAdmin?'admin-av':'')+'">'+initials+'</div>'+
-        '<div>'+
+        '<div class="user-info">'+
           '<div class="user-login">'+esc(u.login)+'</div>'+
           '<div class="user-meta">'+(date?'od '+date+' · ':'')+u.cardCount+' kart · '+permsStr+'</div>'+
         '</div>'+
@@ -517,9 +606,9 @@ function loadUsers(){
         '<div class="user-right">'+
         '<span class="badge '+(isAdmin?'admin':'user')+'">'+(isAdmin?'ADMIN':'USER')+'</span>'+
         limitBadge+
-        '<button class="icon-btn perms" onclick="askPerms('+u.id+')">⚙ Upr.</button>'+
-        '<button class="icon-btn pwd" onclick="askPwd('+u.id+')">🔑 Hasło</button>'+
-        (isAdmin?'':'<button class="icon-btn del" onclick="askDel('+u.id+')">🗑 Usuń</button>')+
+        '<button class="icon-btn perms" onclick="askPerms('+u.id+')">⚙</button>'+
+        '<button class="icon-btn pwd" onclick="askPwd('+u.id+')">🔑</button>'+
+        (isAdmin?'':'<button class="icon-btn del" onclick="askDel('+u.id+')">🗑</button>')+
         '</div>'+
         '</div>';
     }).join('');
@@ -641,14 +730,14 @@ function loadAllCards(){
       return '<div class="user-item">'+
         '<div class="user-left">'+
         '<div class="user-avatar" style="font-size:11px;">ID</div>'+
-        '<div>'+
+        '<div class="user-info">'+
           '<div class="user-login">'+esc(c.name)+' '+esc(c.surname)+'</div>'+
-          '<div class="user-meta">ur. '+dob+' · dodał: '+(c.createdByLogin||'—')+' · '+date+'</div>'+
+          '<div class="user-meta">ur. '+dob+' · '+(c.createdByLogin||'—')+' · '+date+'</div>'+
         '</div>'+
         '</div>'+
         '<div class="user-right">'+
-        '<span class="badge user" style="font-family:\'DM Mono\',monospace;font-size:10px">#'+c.id+'</span>'+
-        '<button class="icon-btn del" onclick="adminDeleteCard('+c.id+')">🗑 Usuń</button>'+
+        '<span class="badge user">#'+c.id+'</span>'+
+        '<button class="icon-btn del" onclick="adminDeleteCard('+c.id+')">🗑</button>'+
         '</div>'+
         '</div>';
     }).join('');
