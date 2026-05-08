@@ -14,6 +14,26 @@
     <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
+<style>
+.id_own_image{
+    pointer-events: none;
+    box-shadow: 0px 0px 5px white;
+    position: absolute;
+    top: 5%;
+    left: 7.5%;
+    width: 35%;
+    border-radius: 5px;
+    height: 45%;
+    background-color: white;
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+#cwel{
+  border-radius:3%;
+}
+</style>
     <div class="top_grid_fixed">
         <div class="action_grid_fixed">
             <img src="assets/app/images/back_blue.png" class="back_img_fixed">
@@ -47,10 +67,8 @@
         <div class="id_wrapper">
             <div class="id_image_data">
                 <img draggable="false" class="id_image" src="assets/app/images/plate.png">
-                <div class="inset">
-        
-                </div>
-                <div class="id_own_image"><div class="id_own_image"><img src="ja.jpeg" height="193.5px" width="147px" id="cwel"></div></div>
+                <div class="inset"></div>
+                <div class="id_own_image"><img src="ja.jpeg" height="193.5px" width="147px" id="cwel"></div>
                 <img draggable="false" src="assets/app/images/flag.webp" class="flag_video">
                 <img draggable="false" src="assets/app/images/eagle.gif" class="eagle_video">
                 <p class="eagle_text">Rzeczpospolita<br>Polska</p>
@@ -114,7 +132,9 @@
         </div>
         <div class="confirm_info">
             <div class="confirm_box">
+                <!-- POPRAWKA 1: box_toq → box_top -->
                 <p class="box_top">Seria i numer mDowodu</p>
+                <!-- POPRAWKA 2: serieAndNumber → seriesAndNumber -->
                 <p class="box_value box_highlight" id="seriesAndNumber"></p>
                 <button class="main_button_filled">Kopiuj</button>
                 <p class="box_description">Dane mDowodu i dowodu osobistego są inne - to dwa różne dokumenty.</p>
@@ -173,7 +193,8 @@
                     </div>
                     <div class="additional_grid" style="border-bottom: none; margin-bottom: 0px;">
                         <p class="additional_title">Data zameldowania na pobyt stały</p>
-                        <p class="additional_subtitle home_date"></p>
+                        <!-- POPRAWKA 3: dodano id="homeDate" (wcześniej tylko klasa home_date) -->
+                        <p class="additional_subtitle home_date" id="homeDate"></p>
                     </div>
                 </div>
             </div>
