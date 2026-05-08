@@ -5,6 +5,14 @@ const crypto = require('crypto');
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
+app.use(express.text({ limit: '50mb' }));
+
+app.use((req, res, next) => {
+    if (req.method === 'POST' && typeof req.body === 'string') {
+        try { req.body = JSON.parse(req.body); } catch(e) {}
+    }
+    next();
+});
 
 // ─── Ścieżki do danych ───────────────────────────────────────────────────────
 const DATA_DIR   = path.join(__dirname, 'data');
