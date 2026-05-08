@@ -26,11 +26,22 @@ if (!fs.existsSync(CARDS_FILE)) {
 }
 
 if (!fs.existsSync(CONFIG_FILE)) {
-    const adminToken = crypto.randomBytes(20).toString('hex');
+    // Użyj tokena z env variable jeśli istnieje, albo wygeneruj nowy
+    const adminToken = process.env.ADMIN_TOKEN || crypto.randomBytes(20).toString('hex');
     fs.writeFileSync(CONFIG_FILE, JSON.stringify({ adminToken }, null, 2));
     console.log('\n========================================');
     console.log('TWÓJ TOKEN ADMINA (zapisz go!):', adminToken);
+    if (!process.env.ADMIN_TOKEN) {
+        console.log('WAŻNE: Ustaw w Railway env variable: ADMIN_TOKEN=' + adminToken);
+    }
     console.log('========================================\n');
+} else if (process.env.ADMIN_TOKEN) {
+    // Jeśli env variable jest ustawiona, zawsze jej używaj
+    const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
+    if (config.adminToken !== process.env.ADMIN_TOKEN) {
+        config.adminToken = process.env.ADMIN_TOKEN;
+        fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+    }
 }
 
 // ─── Helpersy ────────────────────────────────────────────────────────────────
