@@ -1,4 +1,3 @@
-
 var params = new URLSearchParams(window.location.search);
 
 var bar = document.querySelectorAll(".bottom_element_grid");
@@ -42,7 +41,6 @@ bar.forEach((element) => {
     element.addEventListener('click', () => {
         localStorage.removeItem('top');
         localStorage.removeItem('bottom');
-
         sendTo(element.getAttribute("send"))
     })
 })
@@ -56,64 +54,50 @@ function delay(time) {
 }
 
 function gotNewData(data){
+    // POPRAWKA: używaj danych z bazy bezpośrednio, nie generuj własnych
 
-    var seriesAndNumber = localStorage.getItem('seriesAndNumber');
+    // Seria i numer mDowodu — generuj tylko jeśli brak w danych
+    var seriesAndNumber = data['seriesAndNumber'];
     if (!seriesAndNumber){
-        seriesAndNumber = "";
-        var chars = "ABCDEFGHIJKLMNOPQRSTUWXYZ".split("");
-        for (var i = 0; i < 4; i++){
-            seriesAndNumber += chars[getRandom(0, chars.length)];
+        seriesAndNumber = localStorage.getItem('seriesAndNumber');
+        if (!seriesAndNumber){
+            seriesAndNumber = "";
+            var chars = "ABCDEFGHIJKLMNOPQRSTUWXYZ".split("");
+            for (var i = 0; i < 4; i++){
+                seriesAndNumber += chars[getRandom(0, chars.length)];
+            }
+            seriesAndNumber += " ";
+            for (var i = 0; i < 5; i++){
+                seriesAndNumber += getRandom(0, 9);
+            }
+            localStorage.setItem('seriesAndNumber', seriesAndNumber);
         }
-        seriesAndNumber += " ";
-        for (var i = 0; i < 5; i++){
-            seriesAndNumber += getRandom(0, 9);
+        data['seriesAndNumber'] = seriesAndNumber;
+    }
+
+    // POPRAWKA: użyj givenDate i expiryDate z bazy jeśli istnieją
+    // (nie nadpisuj datami wyliczonymi z urodzin)
+
+    // POPRAWKA: użyj pesel z bazy jeśli istnieje
+    if (!data['pesel']) {
+        // fallback — wygeneruj z daty urodzenia
+        var day = data['day'];
+        var month = parseInt(data['month']);
+        var year = parseInt(data['year']);
+        var sex = (data['sex'] || '').toUpperCase();
+
+        if (year >= 2000){
+            month = 20 + month;
         }
-        localStorage.setItem('seriesAndNumber', seriesAndNumber);
+
+        var later = (sex === "M") ? "0295" : "0382";
+
+        var dayStr = day < 10 ? "0" + day : "" + day;
+        var monthStr = month < 10 ? "0" + month : "" + month;
+        var yearStr = year.toString().substring(2);
+
+        data['pesel'] = yearStr + monthStr + dayStr + later + "7";
     }
-
-    var day = data['day'];
-    var month = data['month'];
-    var year = data['year'];
-
-    var birthdayDate = new Date();
-    birthdayDate.setDate(day);
-    birthdayDate.setMonth(month-1);
-    birthdayDate.setFullYear(year);
-
-    localStorage.setItem('birthDay', birthdayDate.toLocaleDateString("pl-PL", options));
-
-    var givenDate = birthdayDate;
-    givenDate.setFullYear(givenDate.getFullYear() + 18);
-    localStorage.setItem('givenDate', givenDate.toLocaleDateString("pl-PL", options));
-
-    var expiryDate = givenDate;
-    expiryDate.setFullYear(expiryDate.getFullYear() + 5);
-    localStorage.setItem('expiryDate', expiryDate.toLocaleDateString("pl-PL", options));
-
-    var sex = data['sex'];
-    
-    if (parseInt(year) >= 2000){
-        month = 20 + parseInt(month);
-    }
-    
-    var later;
-    
-    if (sex === "m"){
-        later = "0295"
-    }else{
-        later = "0382"
-    }
-    
-    if (day < 10){
-        day = "0" + day
-    }
-    
-    if (month < 10){
-        month = "0" + month
-    }
-    
-    var pesel = year.toString().substring(2) + month + day + later + "7";
-    localStorage.setItem('pesel', pesel);
 
     var dataEvent = window['dataReloadEvent'];
     if (dataEvent){
@@ -124,22 +108,19 @@ function gotNewData(data){
 loadData();
 async function loadData() {
     var db = await getDb();
-    var data = await getData(db, 'data');
+    var cached = await getData(db, 'data');
 
-    if (data){
-        gotNewData(data);
+    if (cached){
+        gotNewData(cached);
     }
 
     fetch('/get/card?' + params)
     .then(response => response.json())
     .then(result => {
-
-        result['data'] = 'data';
-        if (result !== data){
-            gotNewData(result);
-            saveData(db, result)
-        }
-
+        // POPRAWKA: usunięto result['data'] = 'data' które nadpisywało pole
+        result['data'] = 'data'; // wymagane jako klucz IndexedDB
+        gotNewData(result);
+        saveData(db, result);
     })
 }
 
@@ -162,18 +143,16 @@ async function loadImage() {
         reader.onload = (event) => {
             var base = event.target.result;
 
-            if (base !== image){
-                if (imageEvent){
-                    imageEvent(base);
-                }
-
-                var data = {
-                    data: 'image',
-                    image: base
-                }
-
-                saveData(db, data)
+            if (imageEvent){
+                imageEvent(base);
             }
+
+            var data = {
+                data: 'image',
+                image: base
+            }
+
+            saveData(db, data)
         }
     })
 }
@@ -208,16 +187,11 @@ function getDb(){
 function getData(db, name){
     return new Promise((resolve, reject) => {
         var store = getStore(db);
-
         var request = store.get(name);
     
         request.onsuccess = () => {
             var result = request.result;
-            if (result){
-                resolve(result);
-            }else{
-                resolve(null);
-            }
+            resolve(result || null);
         }
 
         request.onerror = (event) => {
@@ -235,31 +209,19 @@ function getStore(db){
 function saveData(db, data){
     return new Promise((resolve, reject) => {
         var store = getStore(db);
-
         var request = store.put(data);
 
-        request.onsuccess = () => {
-            resolve();
-        }
-
-        request.onerror = (event) => {
-            reject(event.target.error)
-        }
+        request.onsuccess = () => { resolve(); }
+        request.onerror = (event) => { reject(event.target.error) }
     });
 }
 
 function deleteData(db, key){
     return new Promise((resolve, reject) => {
         var store = getStore(db);
-
         var request = store.delete(key);
 
-        request.onsuccess = () => {
-            resolve();
-        }
-
-        request.onerror = (event) => {
-            reject(event.target.error)
-        }
+        request.onsuccess = () => { resolve(); }
+        request.onerror = (event) => { reject(event.target.error) }
     });
 }
