@@ -148,11 +148,28 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
     <div class="field"><label>Data zameldowania</label><input id="homeDate" placeholder="01.01.2020"></div>
   </div>
 
+  <!-- Hasło -->
+  <div class="form-section">
+    <h2>Zabezpieczenie</h2>
+    <div class="field">
+      <label>Hasło do karty <span style="color:#555;font-weight:400">(opcjonalne — zostaw puste jeśli nie chcesz)</span></label>
+      <div class="input-with-btn">
+        <input id="cardPassword" type="password" placeholder="Hasło przy otwieraniu karty">
+        <button class="gen-btn" type="button" onclick="generatePassword()">🎲 Generuj</button>
+      </div>
+      <div class="pesel-hint" id="passwordHint"></div>
+    </div>
+  </div>
+
   <button class="save-btn" id="saveBtn" onclick="save()">💾 Zapisz kartę</button>
 
   <div class="result-box" id="resultBox">
     <p>✅ Karta zapisana! Skopiuj link dla osoby:</p>
     <input type="text" id="resultLink" readonly>
+    <div id="passwordDisplay" style="display:none;margin-top:10px;padding:10px;background:#0a0a10;border:1px solid #2a2a35;border-radius:8px;">
+      <p style="font-size:12px;color:#888;margin-bottom:4px;">Hasło do karty (przekaż osobno!):</p>
+      <p id="passwordShowText" style="font-size:14px;color:#fff;font-weight:600;letter-spacing:1px;margin:0;"></p>
+    </div>
     <button class="copy-link-btn" onclick="copyResult()">📋 Kopiuj link</button>
   </div>
 </div>
@@ -164,6 +181,7 @@ var session = localStorage.getItem('session');
 var editId = 0;
 var photoData = null;
 var params = new URLSearchParams(location.search);
+var savedToken = null;
 
 if (!session) { location.href = '/login'; }
 
@@ -210,7 +228,6 @@ function setPhoto(url, blob){
   }
 }
 
-// Generuj serię i numer: 3 litery + 6 cyfr
 function generateSeries(){
   var letters = 'ABCDEFGHIJKLMNOPRSTUWXYZ';
   var result = '';
@@ -220,7 +237,6 @@ function generateSeries(){
   document.getElementById('seriesAndNumber').classList.remove('err');
 }
 
-// Generuj PESEL z daty urodzenia i płci
 function generatePesel(){
   var day   = parseInt(document.getElementById('day').value);
   var month = parseInt(document.getElementById('month').value);
@@ -232,7 +248,6 @@ function generatePesel(){
     return;
   }
 
-  // Kodowanie miesiąca wg stulecia
   var m = month;
   if      (year >= 1800 && year <= 1899) m += 80;
   else if (year >= 1900 && year <= 1999) m += 0;
@@ -244,32 +259,37 @@ function generatePesel(){
   var mm  = String(m).padStart(2,'0');
   var dd  = String(day).padStart(2,'0');
 
-  // 4 cyfry porządkowe: 10. cyfra parzysta=kobieta, nieparzysta=mężczyzna
   var ord = Math.floor(Math.random()*1000);
   var tenthDigit;
   if(sex === 'M'){
-    // nieparzysta: 1,3,5,7,9
     var odds = [1,3,5,7,9];
     tenthDigit = odds[Math.floor(Math.random()*5)];
   } else {
-    // parzysta: 0,2,4,6,8
     var evens = [0,2,4,6,8];
     tenthDigit = evens[Math.floor(Math.random()*5)];
   }
   var ordStr = String(ord).padStart(3,'0') + tenthDigit;
-
   var base = yy + mm + dd + ordStr;
 
-  // Cyfra kontrolna
   var weights = [1,3,7,9,1,3,7,9,1,3];
   var sum = 0;
   for(var i=0;i<10;i++) sum += parseInt(base[i]) * weights[i];
   var check = (10 - (sum % 10)) % 10;
 
-  var pesel = base + check;
-  document.getElementById('pesel').value = pesel;
+  document.getElementById('pesel').value = base + check;
   document.getElementById('pesel').classList.remove('err');
   document.getElementById('peselHint').textContent = '✓ Wygenerowano dla: ' + dd+'.'+String(month).padStart(2,'0')+'.'+year + ', ' + (sex==='M'?'mężczyzna':'kobieta');
+}
+
+function generatePassword(){
+  var chars = 'ABCDEFGHJKLMNPQRSTUWXYZabcdefghjkmnpqrstuwxyz23456789!@#$';
+  var pwd = '';
+  for(var i=0;i<10;i++) pwd += chars[Math.floor(Math.random()*chars.length)];
+  var el = document.getElementById('cardPassword');
+  el.type = 'text';
+  el.value = pwd;
+  document.getElementById('passwordHint').textContent = '✓ Zapamiętaj to hasło — będzie wymagane przy otwieraniu karty';
+  setTimeout(()=>{ el.type = 'password'; }, 3000);
 }
 
 function save(){
@@ -315,6 +335,16 @@ function save(){
     if(d.ok){
       toast('Zapisano!','ok');
       if(d.token){
+        savedToken = d.token;
+        var pwd = document.getElementById('cardPassword').value.trim();
+
+        // Zapisz hasło w localStorage powiązane z tokenem
+        if(pwd){
+          localStorage.setItem('pwd_' + d.token, pwd);
+          document.getElementById('passwordDisplay').style.display = 'block';
+          document.getElementById('passwordShowText').textContent = pwd;
+        }
+
         var link = location.protocol+'//'+location.host+'/id?card_token='+d.token;
         document.getElementById('resultLink').value = link;
         document.getElementById('resultBox').classList.add('show');
