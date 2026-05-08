@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Logowanie — mObywatel Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -26,12 +26,13 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'DM Sans', sans-serif;
-  padding: 20px;
+  padding: 16px;
   position: relative;
   overflow: hidden;
 }
@@ -59,7 +60,7 @@ body::after {
   background: var(--surface);
   border: 1px solid var(--border2);
   border-radius: 20px;
-  padding: 44px 40px;
+  padding: 36px 28px;
   width: 100%;
   max-width: 420px;
   position: relative;
@@ -72,7 +73,7 @@ body::after {
 }
 .logo {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }
 .logo-mark {
   display: inline-flex;
@@ -114,12 +115,14 @@ body::after {
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 11px;
-  padding: 13px 16px;
-  font-size: 15px;
+  padding: 14px 16px;
+  font-size: 16px;
   font-family: 'DM Sans', sans-serif;
   color: var(--text);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  -webkit-border-radius: 11px;
 }
 .field input:focus {
   border-color: var(--accent);
@@ -136,8 +139,8 @@ body::after {
   color: #fff;
   border: none;
   border-radius: 11px;
-  padding: 14px;
-  font-size: 15px;
+  padding: 16px;
+  font-size: 16px;
   font-weight: 600;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
@@ -145,6 +148,7 @@ body::after {
   transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
   box-shadow: 0 4px 20px rgba(108,99,255,0.3);
   letter-spacing: 0.2px;
+  min-height: 52px;
 }
 .btn:hover { opacity: 0.9; box-shadow: 0 6px 28px rgba(108,99,255,0.4); }
 .btn:active { transform: scale(0.99); }
@@ -194,6 +198,103 @@ body::after {
   vertical-align: middle;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 24px;
+  }
+  .card {
+    padding: 28px 20px;
+    border-radius: 16px;
+  }
+  .logo {
+    margin-bottom: 24px;
+  }
+  .logo-mark {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+  .logo h1 {
+    font-size: 18px;
+  }
+  .logo p {
+    font-size: 12px;
+  }
+  .field {
+    margin-bottom: 14px;
+  }
+  .field input {
+    padding: 14px 14px;
+    font-size: 16px;
+    min-height: 50px;
+  }
+  .btn {
+    padding: 14px;
+    font-size: 15px;
+    min-height: 50px;
+    margin-top: 6px;
+  }
+  .error {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+  .divider {
+    margin: 20px 0;
+  }
+  .footer-text {
+    font-size: 10px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .card {
+    padding: 24px 16px;
+  }
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  body {
+    align-items: center;
+    padding-top: 12px;
+  }
+  .card {
+    padding: 20px 24px;
+  }
+  .logo {
+    margin-bottom: 16px;
+  }
+  .logo-mark {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .logo h1 {
+    font-size: 16px;
+  }
+  .field {
+    margin-bottom: 10px;
+  }
+  .field input {
+    padding: 10px 12px;
+  }
+  .btn {
+    padding: 12px;
+    min-height: 44px;
+  }
+}
 </style>
 </head>
 <body>
