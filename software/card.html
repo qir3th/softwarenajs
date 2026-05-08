@@ -31,7 +31,12 @@
     z-index: 0;
 }
 #cwel{
-  border-radius:3%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 5px;
+    display: block;
 }
 </style>
     <div class="top_grid_fixed">
@@ -68,7 +73,7 @@
             <div class="id_image_data">
                 <img draggable="false" class="id_image" src="assets/app/images/plate.png">
                 <div class="inset"></div>
-                <div class="id_own_image"><img src="ja.jpeg" height="193.5px" width="147px" id="cwel"></div>
+                <div class="id_own_image"><img id="cwel"></div>
                 <img draggable="false" src="assets/app/images/flag.webp" class="flag_video">
                 <img draggable="false" src="assets/app/images/eagle.gif" class="eagle_video">
                 <p class="eagle_text">Rzeczpospolita<br>Polska</p>
