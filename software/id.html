@@ -12,11 +12,6 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
-    <style>
-        .password_input { color: white !important; }
-        .error_text { color: #e05c5c; font-size: 13px; margin-top: 6px; display: none; }
-        .error_text.show { display: block; }
-    </style>
 </head>
 <body>
     <div class="background"></div>
@@ -33,15 +28,14 @@
             <div class="password_grid">
                 <p class="password_text">Hasło</p>
                 <div class="input_holder">
-                    <input class="password_input" id="passwordInput">
-                    <div class="eye" id="eyeBtn"></div>
+                    <input class="password_input">
+                    <div class="eye"></div>
                 </div>
-                <p class="error_text" id="errorText">Nieprawidłowe hasło</p>
                 <p class="forgot_password">Nie pamiętasz hasła?</p>
             </div>
         </div>
         <div class="bottom">
-            <p class="login" id="loginBtn">Zaloguj się</p>
+            <p class="login">Zaloguj się</p>
             <div class="data">
                 <img class="logo_other" style="height: 20px;" src="assets/app/images/coi.png">
                 <img class="logo_other" src="assets/app/images/mc.png">
@@ -49,130 +43,7 @@
             </div>
         </div>
     </div>
+    <script src="assets/app/id.js"></script>
     <script src="assets/app/manifest.js"></script>
     <script src="assets/cache.js"></script>
-<script>
-var params = new URLSearchParams(window.location.search);
-var cardToken = params.get('card_token') || '';
-var storedPassword = localStorage.getItem('pwd_' + cardToken) || '';
-
-// Powitanie
-var welcome = "Dzień dobry!";
-var h = new Date().getHours();
-if (h >= 18) welcome = "Dobry wieczór!";
-document.querySelector(".welcome").innerHTML = welcome;
-
-function toHome(){
-    location.href = '/documents?' + params;
-}
-
-// ── Input hasła (białe kropki) ────────────────────────────────
-var dot = "•";
-var original = "";
-var input = document.getElementById('passwordInput');
-var eye = document.getElementById('eyeBtn');
-var errorText = document.getElementById('errorText');
-var showing = false;
-
-input.addEventListener("input", () => {
-    errorText.classList.remove('show');
-    var value = input.value;
-    var char = value.substring(value.length - 1);
-    if (value.length < original.length) {
-        original = original.substring(0, value.length);
-    } else {
-        original = original + char;
-    }
-    if (!showing) {
-        input.value = "•".repeat(value.length - 1) + char;
-        clearTimeout(input._dotTimer);
-        input._dotTimer = setTimeout(() => {
-            if (input.value.length > 0)
-                input.value = "•".repeat(original.length);
-        }, 1000);
-    }
-});
-
-input.addEventListener("keypress", (e) => {
-    if (e.key === 'Enter') { document.activeElement.blur(); tryLogin(); }
-});
-
-eye.addEventListener('click', () => {
-    showing = !showing;
-    if (showing) {
-        eye.classList.add('eye_close');
-        input.value = original;
-    } else {
-        eye.classList.remove('eye_close');
-        input.value = "•".repeat(original.length);
-    }
-});
-
-// ── Logowanie hasłem ──────────────────────────────────────────
-document.getElementById('loginBtn').addEventListener('click', tryLogin);
-
-function tryLogin() {
-    if (!storedPassword) { toHome(); return; }
-    if (original === storedPassword) {
-        errorText.classList.remove('show');
-        toHome();
-    } else {
-        errorText.classList.add('show');
-        input.value = '';
-        original = '';
-    }
-}
-
-// ── Face ID / Touch ID — odpala się automatycznie ─────────────
-async function tryFaceId() {
-    if (!window.PublicKeyCredential) return;
-    try {
-        var available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-        if (!available) return;
-
-        var credIdB64 = localStorage.getItem('faceid_cred_' + cardToken);
-
-        if (!credIdB64) {
-            // Pierwsza wizyta — zarejestruj klucz
-            var challenge = crypto.getRandomValues(new Uint8Array(32));
-            var userId = new TextEncoder().encode(cardToken || 'user');
-            var cred = await navigator.credentials.create({
-                publicKey: {
-                    challenge,
-                    rp: { name: 'mObywatel', id: location.hostname },
-                    user: { id: userId, name: 'uzytkownik', displayName: 'uzytkownik' },
-                    pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
-                    authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
-                    timeout: 60000
-                }
-            });
-            credIdB64 = btoa(String.fromCharCode(...new Uint8Array(cred.rawId)));
-            localStorage.setItem('faceid_cred_' + cardToken, credIdB64);
-            toHome();
-        } else {
-            // Kolejne wizyty — uwierzytelnij
-            var credIdBytes = Uint8Array.from(atob(credIdB64), c => c.charCodeAt(0));
-            var challenge = crypto.getRandomValues(new Uint8Array(32));
-            await navigator.credentials.get({
-                publicKey: {
-                    challenge,
-                    rpId: location.hostname,
-                    allowCredentials: [{ type: 'public-key', id: credIdBytes }],
-                    userVerification: 'required',
-                    timeout: 60000
-                }
-            });
-            toHome();
-        }
-    } catch(e) {
-        // NotAllowedError = użytkownik odrzucił, inne = niedostępne
-        // w obu przypadkach zostaje ekran hasła, nic nie robimy
-    }
-}
-
-// Odpal Face ID automatycznie przy wejściu (tylko jeśli jest hasło)
-if (storedPassword) {
-    tryFaceId();
-}
-</script>
 </body>
