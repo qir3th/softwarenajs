@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Generator pełny mDowodu</title>
+<style>
+body { background:#111; color:white; font-family:Arial; text-align:center; }
+input { display:block; margin:6px auto; padding:8px; width:280px; }
+button { padding:10px 20px; margin-top:10px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h2>Generator pełny mDowodu</h2>
+
+<input id="photo" placeholder="zdjęcie (np. ja.jpeg)">
+<input id="name" placeholder="imię">
+<input id="surname" placeholder="nazwisko">
+<input id="nationality" placeholder="obywatelstwo">
+<input id="birthday" placeholder="data urodzenia">
+<input id="pesel" placeholder="PESEL">
+<input id="pesel" placeholder="numer seryjny">
+<input id="expiryDate" placeholder="ważność">
+<input id="givenDate" placeholder="data wydania">
+<input id="father" placeholder="imię ojca">
+<input id="mother" placeholder="imię matki">
+<input id="familyName" placeholder="nazwisko rodowe">
+<input id="sex" placeholder="płeć">
+<input id="fathersFamilyName" placeholder="nazwisko rodowe ojca">
+<input id="mothersFamilyName" placeholder="nazwisko rodowe matki">
+<input id="birthPlace" placeholder="miejsce urodzenia">
+<input id="countryOfBirth" placeholder="kraj urodzenia">
+<input id="adress" placeholder="adres zameldowania">
+<input id="homeDate" placeholder="data zameldowania na pobyt stały">
+
+<button onclick="gen()">Generuj i Pobierz HTML</button>
+
+<script>
+async function gen() {
+  const response = await fetch('template.html'); // Twój plik z pełnym HTML i (podmiana)
+  let template = await response.text();
+
+  const fields = {
+    "(podmiana)": [
+      document.getElementById("photo").value,
+      document.getElementById("name").value,
+      document.getElementById("surname").value,
+      document.getElementById("nationality").value,
+      document.getElementById("birthday").value,
+      document.getElementById("pesel").value,
+      document.getElementById("seriesAndNumber").value,
+      document.getElementById("expiryDate").value,
+      document.getElementById("givenDate").value,
+      document.getElementById("father").value,
+      document.getElementById("mother").value,
+      document.getElementById("familyName").value,
+      document.getElementById("sex").value,
+      document.getElementById("fathersFamilyName").value,
+      document.getElementById("mothersFamilyName").value,
+      document.getElementById("birthPlace").value,
+      document.getElementById("countryOfBirth").value,
+      document.getElementById("adress").value,
+      document.getElementById("homeDate").value
+    ]
+  };
+
+  let i = 0;
+  template = template.replace(/\(podmiana\)/g, () => fields["(podmiana)"][i++]);
+
+  const blob = new Blob([template], {type:"text/html"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "card.html";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
