@@ -1,4 +1,3 @@
-
 var confirmElement = document.querySelector(".confirm");
 
 var time = document.getElementById("time");
