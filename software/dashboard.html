@@ -571,7 +571,8 @@ function confirmDelete(){
 
 function doLogout(){
   fetch('/api/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session})});
-  localStorage.removeItem('session');localStorage.removeItem('role');
+  localStorage.clear();
+  sessionStorage.clear();
   location.href='/login';
 }
 
