@@ -62,23 +62,23 @@ function loadReadyData(result){
         textSex = "Kobieta"
     }
 
-    setData('seriesAndNumber', localStorage.getItem('seriesAndNumber'));
+    setData('seriesAndNumber', result['seriesAndNumber'].toUpperCase());
     setData("name", result['name'].toUpperCase());
     setData("surname", result['surname'].toUpperCase());
     setData("nationality", result['nationality'].toUpperCase());
     setData("fathersName", result['fathersName'].toUpperCase());
     setData("mothersName", result['mothersName'].toUpperCase());
-    setData("birthday", localStorage.getItem('birthDay'));
+    setData("birthday", result['day'] + "." + String(result['month']).padStart(2, '0') + "." + result['year']);
     setData("familyName", result['familyName'].toUpperCase());
     setData("sex", textSex.toUpperCase());
     setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
     setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
     setData("birthPlace", result['birthPlace'].toUpperCase());
     setData("countryOfBirth", result['countryOfBirth'].toUpperCase());
-    setData("adress", ("ul. " + result['address1'] + "<br>" + result['address2'] + " " + result['city']).toUpperCase());
+    setData("adress", result['adress'].toUpperCase());
     
-    setData('givenDate', localStorage.getItem('givenDate'));
-    setData('expiryDate', localStorage.getItem('expiryDate'));
+    setData('givenDate', result['givenDate']);
+    setData('expiryDate', result['expiryDate']);
 
     if (!localStorage.getItem("homeDate")){
       var homeDay = getRandom(1, 25);
@@ -95,7 +95,7 @@ function loadReadyData(result){
     
     document.querySelector(".home_date").innerHTML = localStorage.getItem("homeDate");
 
-    setData("pesel", localStorage.getItem('pesel'));
+    setData("pesel", result['pesel']);
 }
 
 function setImage(image){
