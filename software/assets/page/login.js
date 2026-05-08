@@ -13,6 +13,7 @@ if (access.has('access_token')){
     access = access.get('access_token');
     fetch('/validate', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             'access': access 
         })
@@ -40,6 +41,7 @@ document.querySelector('.login_button').addEventListener('click', () => {
     }else{
         fetch('/validate', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 'token': value
             })
