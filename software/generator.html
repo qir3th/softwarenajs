@@ -2,56 +2,100 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Generator karty</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;}
-.topbar{background:#1a1a22;border-bottom:1px solid #2a2a35;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
-.topbar-title{font-size:17px;font-weight:700;color:#fff;}
+body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;min-height:100dvh;}
+.topbar{background:#1a1a22;border-bottom:1px solid #2a2a35;padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar-title{font-size:16px;font-weight:700;color:#fff;}
 .topbar-title span{color:#6c63ff;}
-.topbar-right{display:flex;gap:10px;}
-.btn-sm{background:none;border:1px solid #2a2a35;color:#aaa;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.topbar-right{display:flex;gap:8px;}
+.btn-sm{background:none;border:1px solid #2a2a35;color:#aaa;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
 .btn-sm:hover{border-color:#6c63ff;color:#fff;}
-.main{max-width:680px;margin:0 auto;padding:24px 16px 60px;}
-.form-section{background:#1a1a22;border:1px solid #2a2a35;border-radius:14px;padding:20px;margin-bottom:16px;}
-.form-section h2{font-size:14px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;}
-.field{margin-bottom:14px;}
+.main{max-width:680px;margin:0 auto;padding:20px 14px 80px;}
+.form-section{background:#1a1a22;border:1px solid #2a2a35;border-radius:14px;padding:18px;margin-bottom:14px;}
+.form-section h2{font-size:13px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;}
+.field{margin-bottom:12px;}
 .field label{display:block;font-size:13px;color:#aaa;margin-bottom:6px;}
-.field input,.field select{width:100%;background:#111118;border:1.5px solid #2a2a35;border-radius:9px;padding:11px 13px;font-size:14px;color:#fff;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.field input,.field select{width:100%;background:#111118;border:1.5px solid #2a2a35;border-radius:9px;padding:12px 13px;font-size:15px;color:#fff;outline:none;transition:border-color 0.2s;-webkit-appearance:none;-webkit-border-radius:9px;}
 .field input:focus,.field select:focus{border-color:#6c63ff;}
 .field input.err,.field select.err{border-color:#e05c5c;}
 .field select option{background:#1a1a22;}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .input-with-btn{display:flex;gap:8px;}
 .input-with-btn input{flex:1;}
-.gen-btn{background:#23232f;border:1.5px solid #2a2a35;color:#aaa;border-radius:9px;padding:0 14px;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.gen-btn{background:#23232f;border:1.5px solid #2a2a35;color:#aaa;border-radius:9px;padding:0 14px;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.2s;min-height:44px;min-width:44px;}
 .gen-btn:hover{border-color:#6c63ff;color:#fff;background:#1a1a2a;}
-.photo-upload{border:2px dashed #2a2a35;border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}
+.photo-upload{border:2px dashed #2a2a35;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}
 .photo-upload:hover{border-color:#6c63ff;background:#18181f;}
 .photo-upload.err{border-color:#e05c5c;}
 .photo-upload.loaded{border-style:solid;border-color:#1D9E75;}
-.photo-upload img{width:80px;height:100px;object-fit:cover;border-radius:8px;display:none;}
+.photo-upload img{width:70px;height:88px;object-fit:cover;border-radius:8px;display:none;}
 .photo-upload.loaded img{display:block;margin:0 auto;}
-.photo-upload-text{color:#666;font-size:14px;margin-top:8px;}
+.photo-upload-text{color:#666;font-size:13px;margin-top:8px;}
 .photo-upload.loaded .photo-upload-text{display:none;}
-.photo-upload-icon{font-size:32px;margin-bottom:6px;}
+.photo-upload-icon{font-size:28px;margin-bottom:6px;}
 .photo-upload.loaded .photo-upload-icon{display:none;}
-.save-btn{width:100%;background:#6c63ff;color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px;transition:background 0.2s;}
+.save-btn{width:100%;background:#6c63ff;color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px;transition:background 0.2s;min-height:52px;}
 .save-btn:hover{background:#5a52e0;}
 .save-btn:disabled{background:#3a3550;cursor:not-allowed;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a22;border:1px solid #2a2a35;border-radius:10px;padding:12px 20px;font-size:13px;color:#fff;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a22;border:1px solid #2a2a35;border-radius:10px;padding:12px 20px;font-size:13px;color:#fff;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);max-width:calc(100% - 32px);text-align:center;}
 .toast.show{opacity:1;}
 .toast.ok{border-color:#1D9E75;color:#5DCAA5;}
 .toast.err{border-color:#e05c5c;color:#e07070;}
 .result-box{background:#111118;border:1px solid #1D9E75;border-radius:12px;padding:16px;margin-top:16px;display:none;}
 .result-box.show{display:block;}
 .result-box p{font-size:13px;color:#5DCAA5;margin-bottom:10px;}
-.result-box input{width:100%;background:#0a0a10;border:1px solid #2a2a35;border-radius:8px;padding:10px;font-size:13px;color:#aaa;outline:none;}
-.copy-link-btn{width:100%;background:none;border:1px solid #1D9E75;color:#5DCAA5;border-radius:8px;padding:9px;font-size:13px;cursor:pointer;margin-top:8px;}
+.result-box input{width:100%;background:#0a0a10;border:1px solid #2a2a35;border-radius:8px;padding:12px;font-size:14px;color:#aaa;outline:none;-webkit-appearance:none;}
+.copy-link-btn{width:100%;background:none;border:1px solid #1D9E75;color:#5DCAA5;border-radius:8px;padding:12px;font-size:14px;cursor:pointer;margin-top:10px;min-height:46px;}
 .copy-link-btn:hover{background:#0a1a10;}
 .pesel-hint{font-size:11px;color:#555;margin-top:4px;}
+
+@media (max-width: 600px) {
+  .topbar { padding: 0 12px; height: 52px; }
+  .topbar-title { font-size: 15px; }
+  .btn-sm { padding: 8px 12px; font-size: 12px; border-radius: 7px; }
+  .main { padding: 16px 12px 70px; }
+  .form-section { padding: 16px 14px; border-radius: 12px; margin-bottom: 12px; }
+  .form-section h2 { font-size: 12px; margin-bottom: 12px; }
+  .two-col { grid-template-columns: 1fr; gap: 0; }
+  .three-col { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .field { margin-bottom: 12px; }
+  .field input, .field select { padding: 14px 12px; font-size: 16px; min-height: 48px; }
+  .input-with-btn { flex-direction: column; gap: 8px; }
+  .input-with-btn input { width: 100%; }
+  .gen-btn { width: 100%; padding: 12px; }
+  .photo-upload { padding: 16px; }
+  .photo-upload img { width: 60px; height: 75px; }
+  .photo-upload-icon { font-size: 24px; }
+  .save-btn { padding: 16px; font-size: 15px; min-height: 52px; }
+  .result-box { padding: 14px; }
+  .result-box p { font-size: 12px; }
+  .result-box input { padding: 14px 12px; font-size: 13px; }
+  .copy-link-btn { padding: 14px; font-size: 13px; }
+  .toast { bottom: 16px; padding: 10px 16px; font-size: 12px; border-radius: 8px; }
+}
+
+@media (max-width: 400px) {
+  .three-col { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .field input, .field select { padding: 12px 10px; font-size: 15px; }
+}
+
+@media (pointer: coarse) {
+  .field input, .field select { min-height: 48px; }
+  .gen-btn, .save-btn, .copy-link-btn { min-height: 48px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .topbar { height: 48px; }
+  .main { padding: 12px 14px 50px; }
+  .form-section { padding: 14px; margin-bottom: 10px; }
+  .form-section h2 { margin-bottom: 10px; }
+  .field { margin-bottom: 10px; }
+  .save-btn { min-height: 44px; padding: 12px; }
+}
 </style>
 </head>
 <body>
@@ -63,7 +107,6 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
 </div>
 
 <div class="main">
-  <!-- Zdjęcie -->
   <div class="form-section">
     <h2>Zdjęcie</h2>
     <div class="photo-upload" id="photoUpload" onclick="document.getElementById('photoInput').click()">
@@ -74,7 +117,6 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
     <input type="file" id="photoInput" accept="image/*" style="display:none">
   </div>
 
-  <!-- Dane osobowe -->
   <div class="form-section">
     <h2>Dane osobowe</h2>
     <div class="two-col">
@@ -92,7 +134,6 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
     <div class="field"><label>Obywatelstwo</label><input id="nationality" placeholder="POLSKIE"></div>
   </div>
 
-  <!-- Data urodzenia i PESEL -->
   <div class="form-section">
     <h2>Data urodzenia i PESEL</h2>
     <div class="three-col">
@@ -106,13 +147,12 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
       <label>PESEL</label>
       <div class="input-with-btn">
         <input id="pesel" placeholder="90010100000" maxlength="11">
-        <button class="gen-btn" type="button" onclick="generatePesel()">🎲 Generuj</button>
+        <button class="gen-btn" type="button" onclick="generatePesel()">🎲</button>
       </div>
       <div class="pesel-hint" id="peselHint"></div>
     </div>
   </div>
 
-  <!-- Rodzice -->
   <div class="form-section">
     <h2>Rodzice</h2>
     <div class="two-col">
@@ -125,14 +165,13 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
     </div>
   </div>
 
-  <!-- Dokument -->
   <div class="form-section">
     <h2>Dane dokumentu</h2>
     <div class="field">
       <label>Seria i numer</label>
       <div class="input-with-btn">
         <input id="seriesAndNumber" placeholder="AAA000000">
-        <button class="gen-btn" type="button" onclick="generateSeries()">🎲 Generuj</button>
+        <button class="gen-btn" type="button" onclick="generateSeries()">🎲</button>
       </div>
     </div>
     <div class="two-col">
@@ -141,24 +180,10 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
     </div>
   </div>
 
-  <!-- Adres -->
   <div class="form-section">
     <h2>Adres zameldowania</h2>
     <div class="field"><label>Adres</label><input id="adress" placeholder="ul. Przykładowa 1, 00-001 Warszawa"></div>
     <div class="field"><label>Data zameldowania</label><input id="homeDate" placeholder="01.01.2020"></div>
-  </div>
-
-  <!-- Hasło -->
-  <div class="form-section">
-    <h2>Zabezpieczenie</h2>
-    <div class="field">
-      <label>Hasło do karty <span style="color:#555;font-weight:400">(opcjonalne — zostaw puste jeśli nie chcesz)</span></label>
-      <div class="input-with-btn">
-        <input id="cardPassword" type="password" placeholder="Hasło przy otwieraniu karty">
-        <button class="gen-btn" type="button" onclick="generatePassword()">🎲 Generuj</button>
-      </div>
-      <div class="pesel-hint" id="passwordHint"></div>
-    </div>
   </div>
 
   <button class="save-btn" id="saveBtn" onclick="save()">💾 Zapisz kartę</button>
@@ -166,10 +191,6 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
   <div class="result-box" id="resultBox">
     <p>✅ Karta zapisana! Skopiuj link dla osoby:</p>
     <input type="text" id="resultLink" readonly>
-    <div id="passwordDisplay" style="display:none;margin-top:10px;padding:10px;background:#0a0a10;border:1px solid #2a2a35;border-radius:8px;">
-      <p style="font-size:12px;color:#888;margin-bottom:4px;">Hasło do karty (przekaż osobno!):</p>
-      <p id="passwordShowText" style="font-size:14px;color:#fff;font-weight:600;letter-spacing:1px;margin:0;"></p>
-    </div>
     <button class="copy-link-btn" onclick="copyResult()">📋 Kopiuj link</button>
   </div>
 </div>
@@ -278,18 +299,7 @@ function generatePesel(){
 
   document.getElementById('pesel').value = base + check;
   document.getElementById('pesel').classList.remove('err');
-  document.getElementById('peselHint').textContent = '✓ Wygenerowano dla: ' + dd+'.'+String(month).padStart(2,'0')+'.'+year + ', ' + (sex==='M'?'mężczyzna':'kobieta');
-}
-
-function generatePassword(){
-  var chars = 'ABCDEFGHJKLMNPQRSTUWXYZabcdefghjkmnpqrstuwxyz23456789!@#$';
-  var pwd = '';
-  for(var i=0;i<10;i++) pwd += chars[Math.floor(Math.random()*chars.length)];
-  var el = document.getElementById('cardPassword');
-  el.type = 'text';
-  el.value = pwd;
-  document.getElementById('passwordHint').textContent = '✓ Zapamiętaj to hasło — będzie wymagane przy otwieraniu karty';
-  setTimeout(()=>{ el.type = 'password'; }, 3000);
+  document.getElementById('peselHint').textContent = '✓ ' + dd+'.'+String(month).padStart(2,'0')+'.'+year + ', ' + (sex==='M'?'mężczyzna':'kobieta');
 }
 
 function save(){
@@ -336,15 +346,6 @@ function save(){
       toast('Zapisano!','ok');
       if(d.token){
         savedToken = d.token;
-        var pwd = document.getElementById('cardPassword').value.trim();
-
-        // Zapisz hasło w localStorage powiązane z tokenem
-        if(pwd){
-          localStorage.setItem('pwd_' + d.token, pwd);
-          document.getElementById('passwordDisplay').style.display = 'block';
-          document.getElementById('passwordShowText').textContent = pwd;
-        }
-
         var link = location.protocol+'//'+location.host+'/id?card_token='+d.token;
         document.getElementById('resultLink').value = link;
         document.getElementById('resultBox').classList.add('show');
