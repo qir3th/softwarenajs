@@ -1,87 +1,87 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="0">
-        <link rel="stylesheet" href="assets/page/login.css">
-        <link rel="stylesheet" href="assets/page/header.css">
-        <link rel="stylesheet" href="assets/page/common.css">
-        <link rel="stylesheet" href="assets/page/footer.css">
-        <link rel="icon" type="image/x-icon" class="icon">
-        <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no">
-        <title>Logowanie</title>
-    </head>
-    <body>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logowanie</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:#0f0f13;display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',Arial,sans-serif;padding:20px;}
+.card{background:#1a1a22;border:1px solid #2a2a35;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;}
+.logo{text-align:center;margin-bottom:32px;}
+.logo h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:1px;}
+.logo span{color:#6c63ff;}
+.logo p{font-size:13px;color:#666;margin-top:6px;}
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:13px;color:#aaa;margin-bottom:7px;font-weight:500;}
+.field input{width:100%;background:#111118;border:1.5px solid #2a2a35;border-radius:10px;padding:13px 15px;font-size:15px;color:#fff;outline:none;transition:border-color 0.2s;}
+.field input:focus{border-color:#6c63ff;}
+.field input.err{border-color:#e05c5c;}
+.btn{width:100%;background:#6c63ff;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:background 0.2s;}
+.btn:hover{background:#5a52e0;}
+.btn:active{background:#4a43cc;}
+.btn:disabled{background:#3a3550;cursor:not-allowed;}
+.error{background:#2a1515;border:1px solid #5c2020;border-radius:10px;padding:12px 15px;font-size:13px;color:#e07070;margin-bottom:16px;display:none;}
+.error.show{display:block;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>m<span>Obywatel</span></h1>
+    <p>Panel zarządzania</p>
+  </div>
+  <div class="error" id="err"></div>
+  <div class="field">
+    <label>Login</label>
+    <input type="text" id="login" placeholder="Wpisz login" autocomplete="username">
+  </div>
+  <div class="field">
+    <label>Hasło</label>
+    <input type="password" id="password" placeholder="Wpisz hasło" autocomplete="current-password">
+  </div>
+  <button class="btn" id="btn" onclick="doLogin()">Zaloguj się</button>
+</div>
+<script>
+var loginInput = document.getElementById('login');
+var passInput = document.getElementById('password');
+var errBox = document.getElementById('err');
+var btn = document.getElementById('btn');
 
-        <div class="background_container">
-            <div class="background_gradient"></div>
-            <canvas class="background"></canvas>
-        </div>
+// Already logged in?
+var sess = localStorage.getItem('session');
+if (sess) {
+  fetch('/api/me', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:sess})})
+  .then(r=>r.json()).then(d=>{if(d.ok) location.href='/dashboard';});
+}
 
-        <div class="header">
-            <div class="header_opacity"></div>
-            <img class="header_logo logo">
-            <img class="hamburger" src="assets/page/images/hamburger.png">
-            <div class="header_holder">
-                <img class="x" src="assets/page/images/close.png">
-                <div class="buttons header_buttons">
-                    <div class="button" onclick="location.href = '/'">
-                        <p class="button_text">Strona główna</p>
-                        <div class="button_underline"></div>
-                    </div>
-                    <div class="button" onclick="window.open('/discord')">
-                        <p class="button_text">Discord</p>
-                        <div class="button_underline"></div>
-                    </div>
-                    <div class="login">
-                        <div class="login_grid">
-                            <p class="login_text">Zaloguj się</p>
-                            <img class="login_arrow" src="assets/page/images/arrow.png">
-                        </div>
-                        <p class="login_action" onclick="location.href = '/dashboard'">Panel</p>
-                        <p class="login_action" onclick="localStorage.removeItem('token'); location.href = '/'">Wyloguj się</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+[loginInput, passInput].forEach(el => {
+  el.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+  el.addEventListener('input', () => { el.classList.remove('err'); errBox.classList.remove('show'); });
+});
 
-        <div class="container">
-            <p class="login_title" id="login">LOGOWANIE DO <span class="highlight">PANELU</span></p>
-            <div class="error_box">
-                
-            </div>
-            <div class="input_holder">
-                <input class="input" placeholder=" " type="password">
-                <p class="input_placeholder">Wprowadź token</p>
-                <p class="input_error">To pole nie może być puste</p>
-            </div>
-            <p class="login_button">Zaloguj się</p>
-            <div class="discord_button" onclick="location.href = '/auth/discord'">
-                <div class="discord_grid">
-                    <img class="discord_image" src="assets/page/images/discord.png">
-                    <p class="discord_text">Zaloguj się przez discord</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p class="footer_title name_caps"></p>
-            <div class="buttons">
-                <div class="button" onclick="location.href = '/'">
-                    <p class="button_text">Strona główna</p>
-                    <div class="button_underline"></div>
-                </div>
-                <div class="button" onclick="window.open('/discord')">
-                    <p class="button_text">Discord</p>
-                    <div class="button_underline"></div>
-                </div>
-            </div>
-        </div>
-
-        <script src="assets/page/branding.js"></script>
-        <script src="assets/page/header.js"></script>
-        <script src="assets/page/login.js"></script>
-    </body>
+function doLogin(){
+  var login = loginInput.value.trim();
+  var pass = passInput.value;
+  if(!login){loginInput.classList.add('err');return;}
+  if(!pass){passInput.classList.add('err');return;}
+  btn.disabled = true;
+  btn.textContent = 'Logowanie...';
+  fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login,password:pass})})
+  .then(r=>r.json())
+  .then(d=>{
+    btn.disabled=false; btn.textContent='Zaloguj się';
+    if(d.ok){
+      localStorage.setItem('session', d.token);
+      localStorage.setItem('role', d.role);
+      location.href='/dashboard';
+    } else {
+      errBox.textContent = d.error || 'Błąd logowania';
+      errBox.classList.add('show');
+    }
+  })
+  .catch(()=>{btn.disabled=false;btn.textContent='Zaloguj się';errBox.textContent='Błąd połączenia z serwerem';errBox.classList.add('show');});
+}
+</script>
+</body>
 </html>

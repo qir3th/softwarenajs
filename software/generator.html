@@ -2,80 +2,268 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Generator pełny mDowodu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generator karty</title>
 <style>
-body { background:#111; color:white; font-family:Arial; text-align:center; }
-input { display:block; margin:6px auto; padding:8px; width:280px; }
-button { padding:10px 20px; margin-top:10px; cursor:pointer; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;}
+.topbar{background:#1a1a22;border-bottom:1px solid #2a2a35;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar-title{font-size:17px;font-weight:700;color:#fff;}
+.topbar-title span{color:#6c63ff;}
+.topbar-right{display:flex;gap:10px;}
+.btn-sm{background:none;border:1px solid #2a2a35;color:#aaa;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.btn-sm:hover{border-color:#6c63ff;color:#fff;}
+.main{max-width:680px;margin:0 auto;padding:24px 16px 60px;}
+.form-section{background:#1a1a22;border:1px solid #2a2a35;border-radius:14px;padding:20px;margin-bottom:16px;}
+.form-section h2{font-size:14px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:13px;color:#aaa;margin-bottom:6px;}
+.field input,.field select{width:100%;background:#111118;border:1.5px solid #2a2a35;border-radius:9px;padding:11px 13px;font-size:14px;color:#fff;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.field input:focus,.field select:focus{border-color:#6c63ff;}
+.field input.err,.field select.err{border-color:#e05c5c;}
+.field select option{background:#1a1a22;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.photo-upload{border:2px dashed #2a2a35;border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}
+.photo-upload:hover{border-color:#6c63ff;background:#18181f;}
+.photo-upload.err{border-color:#e05c5c;}
+.photo-upload.loaded{border-style:solid;border-color:#1D9E75;}
+.photo-upload img{width:80px;height:100px;object-fit:cover;border-radius:8px;display:none;}
+.photo-upload.loaded img{display:block;margin:0 auto;}
+.photo-upload-text{color:#666;font-size:14px;margin-top:8px;}
+.photo-upload.loaded .photo-upload-text{display:none;}
+.photo-upload-icon{font-size:32px;margin-bottom:6px;}
+.photo-upload.loaded .photo-upload-icon{display:none;}
+.save-btn{width:100%;background:#6c63ff;color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px;transition:background 0.2s;}
+.save-btn:hover{background:#5a52e0;}
+.save-btn:disabled{background:#3a3550;cursor:not-allowed;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a22;border:1px solid #2a2a35;border-radius:10px;padding:12px 20px;font-size:13px;color:#fff;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.toast.show{opacity:1;}
+.toast.ok{border-color:#1D9E75;color:#5DCAA5;}
+.toast.err{border-color:#e05c5c;color:#e07070;}
+.result-box{background:#111118;border:1px solid #1D9E75;border-radius:12px;padding:16px;margin-top:16px;display:none;}
+.result-box.show{display:block;}
+.result-box p{font-size:13px;color:#5DCAA5;margin-bottom:10px;}
+.result-box input{width:100%;background:#0a0a10;border:1px solid #2a2a35;border-radius:8px;padding:10px;font-size:13px;color:#aaa;outline:none;}
+.copy-link-btn{width:100%;background:none;border:1px solid #1D9E75;color:#5DCAA5;border-radius:8px;padding:9px;font-size:13px;cursor:pointer;margin-top:8px;}
+.copy-link-btn:hover{background:#0a1a10;}
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="topbar-title">m<span>Obywatel</span> &nbsp;<span style="color:#555;font-weight:400;font-size:14px" id="page-title">Nowa karta</span></div>
+  <div class="topbar-right">
+    <button class="btn-sm" onclick="location.href='/dashboard'">← Dashboard</button>
+  </div>
+</div>
 
-<h2>Generator pełny mDowodu</h2>
+<div class="main">
+  <!-- Zdjęcie -->
+  <div class="form-section">
+    <h2>Zdjęcie</h2>
+    <div class="photo-upload" id="photoUpload" onclick="document.getElementById('photoInput').click()">
+      <div class="photo-upload-icon">📷</div>
+      <img id="photoPreview" src="" alt="zdjęcie">
+      <div class="photo-upload-text">Kliknij żeby wybrać zdjęcie</div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none">
+  </div>
 
-<input id="photo" placeholder="zdjęcie (np. ja.jpeg)">
-<input id="name" placeholder="imię">
-<input id="surname" placeholder="nazwisko">
-<input id="nationality" placeholder="obywatelstwo">
-<input id="birthday" placeholder="data urodzenia">
-<input id="pesel" placeholder="PESEL">
-<input id="pesel" placeholder="numer seryjny">
-<input id="expiryDate" placeholder="ważność">
-<input id="givenDate" placeholder="data wydania">
-<input id="father" placeholder="imię ojca">
-<input id="mother" placeholder="imię matki">
-<input id="familyName" placeholder="nazwisko rodowe">
-<input id="sex" placeholder="płeć">
-<input id="fathersFamilyName" placeholder="nazwisko rodowe ojca">
-<input id="mothersFamilyName" placeholder="nazwisko rodowe matki">
-<input id="birthPlace" placeholder="miejsce urodzenia">
-<input id="countryOfBirth" placeholder="kraj urodzenia">
-<input id="adress" placeholder="adres zameldowania">
-<input id="homeDate" placeholder="data zameldowania na pobyt stały">
+  <!-- Dane osobowe -->
+  <div class="form-section">
+    <h2>Dane osobowe</h2>
+    <div class="two-col">
+      <div class="field"><label>Imię</label><input id="name" placeholder="Jan"></div>
+      <div class="field"><label>Nazwisko</label><input id="surname" placeholder="Kowalski"></div>
+    </div>
+    <div class="field"><label>Nazwisko rodowe</label><input id="familyName" placeholder="Kowalski"></div>
+    <div class="field">
+      <label>Płeć</label>
+      <select id="sex">
+        <option value="M">Mężczyzna (M)</option>
+        <option value="F">Kobieta (F)</option>
+      </select>
+    </div>
+    <div class="field"><label>Obywatelstwo</label><input id="nationality" placeholder="POLSKIE"></div>
+  </div>
 
-<button onclick="gen()">Generuj i Pobierz HTML</button>
+  <!-- Data urodzenia -->
+  <div class="form-section">
+    <h2>Data urodzenia i PESEL</h2>
+    <div class="three-col">
+      <div class="field"><label>Dzień</label><input id="day" type="number" placeholder="1" min="1" max="31"></div>
+      <div class="field"><label>Miesiąc</label><input id="month" type="number" placeholder="1" min="1" max="12"></div>
+      <div class="field"><label>Rok</label><input id="year" type="number" placeholder="1990"></div>
+    </div>
+    <div class="field"><label>Miejsce urodzenia</label><input id="birthPlace" placeholder="Warszawa"></div>
+    <div class="field"><label>Kraj urodzenia</label><input id="countryOfBirth" placeholder="POLSKA"></div>
+    <div class="field"><label>PESEL</label><input id="pesel" placeholder="90010100000" maxlength="11"></div>
+  </div>
+
+  <!-- Rodzice -->
+  <div class="form-section">
+    <h2>Rodzice</h2>
+    <div class="two-col">
+      <div class="field"><label>Imię ojca</label><input id="father" placeholder="Marek"></div>
+      <div class="field"><label>Imię matki</label><input id="mother" placeholder="Anna"></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label>Nazwisko rodowe ojca</label><input id="fathersFamilyName" placeholder="Kowalski"></div>
+      <div class="field"><label>Nazwisko rodowe matki</label><input id="mothersFamilyName" placeholder="Nowak"></div>
+    </div>
+  </div>
+
+  <!-- Dokument -->
+  <div class="form-section">
+    <h2>Dane dokumentu</h2>
+    <div class="field"><label>Seria i numer</label><input id="seriesAndNumber" placeholder="AAA000000"></div>
+    <div class="two-col">
+      <div class="field"><label>Data wydania</label><input id="givenDate" placeholder="01.01.2020"></div>
+      <div class="field"><label>Data ważności</label><input id="expiryDate" placeholder="01.01.2030"></div>
+    </div>
+  </div>
+
+  <!-- Adres -->
+  <div class="form-section">
+    <h2>Adres zameldowania</h2>
+    <div class="field"><label>Adres</label><input id="adress" placeholder="ul. Przykładowa 1, 00-001 Warszawa"></div>
+    <div class="field"><label>Data zameldowania</label><input id="homeDate" placeholder="01.01.2020"></div>
+  </div>
+
+  <button class="save-btn" id="saveBtn" onclick="save()">💾 Zapisz kartę</button>
+
+  <div class="result-box" id="resultBox">
+    <p>✅ Karta zapisana! Skopiuj link dla osoby:</p>
+    <input type="text" id="resultLink" readonly>
+    <button class="copy-link-btn" onclick="copyResult()">📋 Kopiuj link</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-async function gen() {
-  const response = await fetch('template.html'); // Twój plik z pełnym HTML i (podmiana)
-  let template = await response.text();
+var session = localStorage.getItem('session');
+var editId = 0;
+var photoData = null;
+var params = new URLSearchParams(location.search);
 
-  const fields = {
-    "(podmiana)": [
-      document.getElementById("photo").value,
-      document.getElementById("name").value,
-      document.getElementById("surname").value,
-      document.getElementById("nationality").value,
-      document.getElementById("birthday").value,
-      document.getElementById("pesel").value,
-      document.getElementById("seriesAndNumber").value,
-      document.getElementById("expiryDate").value,
-      document.getElementById("givenDate").value,
-      document.getElementById("father").value,
-      document.getElementById("mother").value,
-      document.getElementById("familyName").value,
-      document.getElementById("sex").value,
-      document.getElementById("fathersFamilyName").value,
-      document.getElementById("mothersFamilyName").value,
-      document.getElementById("birthPlace").value,
-      document.getElementById("countryOfBirth").value,
-      document.getElementById("adress").value,
-      document.getElementById("homeDate").value
-    ]
+if (!session) { location.href = '/login'; }
+
+// Edit mode?
+if (params.has('id')) {
+  editId = parseInt(params.get('id'));
+  document.getElementById('page-title').textContent = 'Edytuj kartę';
+
+  fetch('/get/card?session='+session+'&id='+editId)
+  .then(r=>r.json()).then(d=>{
+    Object.keys(d).forEach(k=>{
+      var el = document.getElementById(k);
+      if(el) el.value = d[k];
+    });
+  });
+
+  fetch('/images?session='+session+'&id='+editId)
+  .then(r=>r.blob()).then(blob=>{
+    var url = URL.createObjectURL(blob);
+    setPhoto(url, blob);
+  }).catch(()=>{});
+}
+
+// Photo upload
+document.getElementById('photoInput').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    setPhoto(ev.target.result, null);
+    photoData = ev.target.result;
   };
+  reader.readAsDataURL(file);
+});
 
-  let i = 0;
-  template = template.replace(/\(podmiana\)/g, () => fields["(podmiana)"][i++]);
+function setPhoto(url, blob){
+  var prev = document.getElementById('photoPreview');
+  prev.src = url;
+  document.getElementById('photoUpload').classList.add('loaded');
+  document.getElementById('photoUpload').classList.remove('err');
+  if(!blob) photoData = url;
+  else {
+    var reader = new FileReader();
+    reader.onload = function(ev){ photoData = ev.target.result; };
+    reader.readAsDataURL(blob);
+  }
+}
 
-  const blob = new Blob([template], {type:"text/html"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "card.html";
-  a.click();
-  URL.revokeObjectURL(url);
+function save(){
+  var btn = document.getElementById('saveBtn');
+  if(btn.disabled) return;
+
+  // Validate
+  var required = ['name','surname','nationality','pesel','seriesAndNumber','expiryDate','givenDate'];
+  var ok = true;
+  required.forEach(id=>{
+    var el = document.getElementById(id);
+    if(!el.value.trim()){el.classList.add('err');ok=false;}
+  });
+
+  var day = document.getElementById('day').value;
+  var month = document.getElementById('month').value;
+  var year = document.getElementById('year').value;
+  if(!day||!month||!year){
+    ['day','month','year'].forEach(id=>document.getElementById(id).classList.add('err'));
+    ok=false;
+  }
+
+  if(!photoData && editId===0){
+    document.getElementById('photoUpload').classList.add('err');
+    ok=false;
+  }
+
+  if(!ok){toast('Wypełnij wszystkie wymagane pola','err');return;}
+
+  var data = {};
+  ['name','surname','familyName','sex','nationality','birthPlace','countryOfBirth','pesel','father','mother','fathersFamilyName','mothersFamilyName','seriesAndNumber','givenDate','expiryDate','adress','homeDate'].forEach(id=>{
+    data[id] = document.getElementById(id).value;
+  });
+  data.day = parseInt(day);
+  data.month = parseInt(month);
+  data.year = parseInt(year);
+  if(photoData) data.image = photoData;
+
+  btn.disabled=true; btn.textContent='Zapisywanie...';
+
+  fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session,id:editId,data})})
+  .then(r=>r.json()).then(d=>{
+    btn.disabled=false; btn.textContent='💾 Zapisz kartę';
+    if(d.ok){
+      toast('Zapisano!','ok');
+      if(d.token){
+        var link = location.protocol+'//'+location.host+'/id?card_token='+d.token;
+        document.getElementById('resultLink').value = link;
+        document.getElementById('resultBox').classList.add('show');
+      } else {
+        setTimeout(()=>location.href='/dashboard', 800);
+      }
+    } else toast(d.error||'Błąd zapisu','err');
+  })
+  .catch(()=>{btn.disabled=false;btn.textContent='💾 Zapisz kartę';toast('Błąd połączenia','err');});
+}
+
+function copyResult(){
+  var link = document.getElementById('resultLink').value;
+  navigator.clipboard.writeText(link).then(()=>toast('Link skopiowany!','ok'));
+}
+
+// Clear errors on input
+document.querySelectorAll('input,select').forEach(el=>{
+  el.addEventListener('input',()=>el.classList.remove('err'));
+});
+
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 </script>
-
 </body>
 </html>

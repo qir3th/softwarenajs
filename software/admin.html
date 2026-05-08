@@ -1,124 +1,216 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="0">
-        <link rel="stylesheet" href="assets/page/common.css">
-        <link rel="stylesheet" href="assets/page/dashboard.css">
-        <link rel="stylesheet" href="assets/page/header.css">
-        <link rel="stylesheet" href="assets/page/footer.css">
-        <link rel="stylesheet" href="assets/page/notification.css">
-        <link rel="icon" type="image/x-icon" class="icon">
-        <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no">
-        <title>Panel</title>
-    </head>
-    <body>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admina</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;}
+.topbar{background:#1a1a22;border-bottom:1px solid #2a2a35;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar-title{font-size:17px;font-weight:700;color:#fff;}
+.topbar-title span{color:#6c63ff;}
+.topbar-right{display:flex;gap:10px;}
+.btn-sm{background:none;border:1px solid #2a2a35;color:#aaa;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.btn-sm:hover{border-color:#6c63ff;color:#fff;}
+.btn-sm.primary{background:#6c63ff;border-color:#6c63ff;color:#fff;}
+.btn-sm.primary:hover{background:#5a52e0;}
+.main{max-width:800px;margin:0 auto;padding:24px 16px;}
+.section{background:#1a1a22;border:1px solid #2a2a35;border-radius:14px;margin-bottom:20px;overflow:hidden;}
+.section-head{padding:16px 20px;border-bottom:1px solid #2a2a35;display:flex;align-items:center;justify-content:space-between;}
+.section-head h2{font-size:15px;font-weight:600;}
+.add-form{padding:16px 20px;border-bottom:1px solid #2a2a35;display:none;}
+.add-form.open{display:block;}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;}
+.form-row input{flex:1;min-width:140px;background:#111118;border:1.5px solid #2a2a35;border-radius:8px;padding:10px 13px;font-size:14px;color:#fff;outline:none;}
+.form-row input:focus{border-color:#6c63ff;}
+.form-row button{background:#6c63ff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;}
+.form-row button:hover{background:#5a52e0;}
+.user-list{padding:0;}
+.user-item{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #1f1f2a;gap:12px;}
+.user-item:last-child{border-bottom:none;}
+.user-left{display:flex;align-items:center;gap:12px;}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:#1e1a3a;border:1px solid #3a3560;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#9d97ff;flex-shrink:0;}
+.user-avatar.admin-av{background:#1a2a1a;border-color:#1D9E75;color:#5DCAA5;}
+.user-login{font-size:14px;font-weight:500;color:#fff;}
+.user-meta{font-size:11px;color:#555;margin-top:2px;}
+.user-right{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{font-size:11px;padding:3px 9px;border-radius:20px;}
+.badge.admin{background:#1a2a1a;color:#5DCAA5;border:1px solid #1D9E75;}
+.badge.user{background:#1e1a3a;color:#9d97ff;border:1px solid #3a3560;}
+.icon-btn{background:none;border:1px solid #2a2a35;border-radius:7px;padding:6px 10px;font-size:12px;color:#aaa;cursor:pointer;transition:all 0.2s;}
+.icon-btn:hover{background:#23232f;}
+.icon-btn.del:hover{border-color:#e05c5c;color:#e07070;background:#1a0f0f;}
+.icon-btn.pwd:hover{border-color:#63a8ff;color:#63a8ff;}
+.empty-users{padding:30px;text-align:center;color:#555;font-size:14px;}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:#1a1a22;border:1px solid #2a2a35;border-radius:16px;padding:28px;max-width:360px;width:100%;}
+.modal h2{font-size:16px;font-weight:600;margin-bottom:10px;}
+.modal p{font-size:13px;color:#888;margin-bottom:16px;}
+.modal input{width:100%;background:#111118;border:1.5px solid #2a2a35;border-radius:8px;padding:11px 13px;font-size:14px;color:#fff;outline:none;margin-bottom:16px;}
+.modal input:focus{border-color:#6c63ff;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btns button{flex:1;padding:11px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;border:none;}
+.modal-btns .cancel{background:#23232f;color:#aaa;}
+.modal-btns .confirm{background:#c0392b;color:#fff;}
+.modal-btns .save{background:#6c63ff;color:#fff;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a22;border:1px solid #2a2a35;border-radius:10px;padding:12px 20px;font-size:13px;color:#fff;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.toast.show{opacity:1;}
+.toast.ok{border-color:#1D9E75;color:#5DCAA5;}
+.toast.err{border-color:#e05c5c;color:#e07070;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-title">m<span>Obywatel</span> &nbsp;<span style="color:#555;font-weight:400;font-size:14px">Admin</span></div>
+  <div class="topbar-right">
+    <button class="btn-sm" onclick="location.href='/dashboard'">← Dashboard</button>
+    <button class="btn-sm" onclick="doLogout()">Wyloguj</button>
+  </div>
+</div>
 
-        <div class="header">
-            <div class="header_opacity"></div>
-            <img class="header_logo logo">
-            <img class="hamburger" src="assets/page/images/hamburger.png">
-            <div class="header_holder">
-                <img class="x" src="assets/page/images/close.png">
-                <div class="buttons header_buttons">
-                    <div class="button" onclick="location.href = '/'">
-                        <p class="button_text">Strona główna</p>
-                        <div class="button_underline"></div>
-                    </div>
-                    <div class="button" onclick="window.open('/discord')">
-                        <p class="button_text">Discord</p>
-                        <div class="button_underline"></div>
-                    </div>
-                    <div class="login">
-                        <div class="login_grid">
-                            <p class="login_text">Zaloguj się</p>
-                            <img class="login_arrow" src="assets/page/images/arrow.png">
-                        </div>
-                        <p class="login_action" onclick="location.href = '/dashboard'">Panel</p>
-                        <p class="login_action" onclick="localStorage.removeItem('token'); location.href = '/'">Wyloguj się</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="main">
+  <div class="section">
+    <div class="section-head">
+      <h2>Użytkownicy</h2>
+      <button class="btn-sm primary" onclick="toggleAddForm()">+ Dodaj użytkownika</button>
+    </div>
+    <div class="add-form" id="addForm">
+      <div class="form-row">
+        <input type="text" id="newLogin" placeholder="Login" autocomplete="off">
+        <input type="password" id="newPass" placeholder="Hasło" autocomplete="off">
+        <button onclick="addUser()">Dodaj</button>
+      </div>
+    </div>
+    <div class="user-list" id="userList">
+      <div class="empty-users">Ładowanie...</div>
+    </div>
+  </div>
+</div>
 
-        <div class="confirm box">
-            <div class="box_opacity"></div>
-            <div class="box_panel">
-                <p class="confirm_title">USUWANIE</p>
-                <p class="confirm_description">Jesteś pewien(-na), że chcesz usunąć ten dowód?</p>
-                <div class="confirm_action">
-                    <p class="confirm_yes">Usuń</p>
-                    <p class="confirm_no">Anuluj</p>
-                </div>
-            </div>
-        </div>
+<div class="toast" id="toast"></div>
 
-        <div class="guide box">
-            <div class="box_opacity"></div>
-            <div class="box_panel">
-                <p class="guide_title">INSTRUKCJA INSTALACJI</p>
-                <div class="guide_grid">
-                    <div class="guide_type">
-                        <p class="guide_type_title">Dla systemu android</p>
-                        <ul class="guide_list">
-                            <li>Stwórz dowód i kliknij wejdź</li>
-                            <li>Upewnij się, że używasz przeglądarki Chrome</li>
-                            <li>Kliknij 3 kropki, a potem dodaj do ekranu głównego</li>
-                        </ul>
-                    </div>
-                    <div class="guide_type">
-                        <p class="guide_type_title">Dla systemu IOS</p>
-                        <ul class="guide_list">
-                            <li>Stwórz dowód i kliknij wejdź</li>
-                            <li>Upewnij się, że używasz przeglądarki Safari</li>
-                            <li>Kliknij udostępnij, a potem dodaj do ekranu głównego</li>
-                        </ul>
-                    </div>
-                    <div class="guide_type">
-                        <p class="guide_type_title">Dla telefonu samsung</p>
-                        <ul class="guide_list">
-                            <li>Stwórz dowód i kliknij wejdź</li>
-                            <li>Upewnij się, że używasz przeglądarki Internet</li>
-                            <li>Kliknij 3 paski, a potem dodaj do ekranu głównego</li>
-                        </ul>
-                    </div>
-                </div>
-                <p class="guide_close">Rozumiem</p>
-            </div>
-        </div>
+<div class="modal-bg" id="delModal">
+  <div class="modal">
+    <h2>Usuń użytkownika</h2>
+    <p>Jesteś pewien? Użytkownik straci dostęp do panelu.</p>
+    <div class="modal-btns">
+      <button class="cancel" onclick="closeModals()">Anuluj</button>
+      <button class="confirm" onclick="confirmDelete()">Usuń</button>
+    </div>
+  </div>
+</div>
 
+<div class="modal-bg" id="pwdModal">
+  <div class="modal">
+    <h2>Zmień hasło</h2>
+    <p>Wpisz nowe hasło dla użytkownika.</p>
+    <input type="password" id="newPwdInput" placeholder="Nowe hasło">
+    <div class="modal-btns">
+      <button class="cancel" onclick="closeModals()">Anuluj</button>
+      <button class="save" onclick="confirmPwd()">Zapisz</button>
+    </div>
+  </div>
+</div>
 
-        <div class="container">
-            <p class="welcome">WITAJ W PANELU</p>
-            <p class="description">Wybierz, co chcesz zrobić.</p>
-            <div class="action_grid">
-                <div class="image_button" onclick="location.href = '/dashboard'">
-                    <div class="image_button_grid">
-                        <img class="image_button_image" src="assets/page/images/back.png">
-                        <p class="image_button_text">Wróć</p>
-                    </div>
-                </div>
-                <div class="image_button guide_button">
-                    <div class="image_button_grid">
-                        <img class="image_button_image" src="assets/page/images/guide.png">
-                        <p class="image_button_text">Instrukcja</p>
-                    </div>
-                </div>
-            </div>
-            <p class="description ids">DOWODY</p>
-            <div class="id_collector"></div>
-        </div>
+<script>
+var session = localStorage.getItem('session');
+var deleteUserId = null;
+var pwdUserId = null;
 
-        <script>
-            var type = 'admin'
-        </script>
-        <script src="assets/page/branding.js"></script>
-        <script src="assets/page/header.js"></script>
-        <script src="assets/page/dashboard.js"></script>
-        <script src="assets/page/notification.js"></script>
-        <script src="assets/page/common.js"></script>
-        <script src="assets/app/encode.js"></script>
-    </body>
+if (!session) { location.href = '/login'; }
+
+fetch('/api/me',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session})})
+.then(r=>r.json()).then(d=>{
+  if(!d.ok||d.role!=='admin'){location.href='/dashboard';}
+  else loadUsers();
+});
+
+function loadUsers(){
+  fetch('/api/users',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session})})
+  .then(r=>r.json()).then(d=>{
+    if(!d.ok){toast('Błąd ładowania','err');return;}
+    var list = document.getElementById('userList');
+    if(d.users.length===0){list.innerHTML='<div class="empty-users">Brak użytkowników.</div>';return;}
+    list.innerHTML = d.users.map(u=>{
+      var isAdmin = u.role==='admin';
+      var initials = (u.login[0]||'?').toUpperCase();
+      var date = u.createdAt ? new Date(u.createdAt).toLocaleDateString('pl-PL') : '';
+      return '<div class="user-item">'+
+        '<div class="user-left">'+
+        '<div class="user-avatar '+(isAdmin?'admin-av':'')+'">'+initials+'</div>'+
+        '<div><div class="user-login">'+esc(u.login)+'</div><div class="user-meta">'+(date?'dodano '+date:'')+'</div></div>'+
+        '</div>'+
+        '<div class="user-right">'+
+        '<span class="badge '+(isAdmin?'admin':'user')+'">'+(isAdmin?'admin':'użytkownik')+'</span>'+
+        '<button class="icon-btn pwd" onclick="askPwd('+u.id+')">🔑 Hasło</button>'+
+        (isAdmin?'':'<button class="icon-btn del" onclick="askDel('+u.id+')">🗑 Usuń</button>')+
+        '</div>'+
+        '</div>';
+    }).join('');
+  });
+}
+
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function toggleAddForm(){
+  var f = document.getElementById('addForm');
+  f.classList.toggle('open');
+}
+
+function addUser(){
+  var login = document.getElementById('newLogin').value.trim();
+  var pass = document.getElementById('newPass').value;
+  if(!login||!pass){toast('Wypełnij login i hasło','err');return;}
+  fetch('/api/users/add',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session,login,password:pass})})
+  .then(r=>r.json()).then(d=>{
+    if(d.ok){
+      toast('Użytkownik dodany!','ok');
+      document.getElementById('newLogin').value='';
+      document.getElementById('newPass').value='';
+      document.getElementById('addForm').classList.remove('open');
+      loadUsers();
+    } else toast(d.error||'Błąd','err');
+  });
+}
+
+function askDel(id){deleteUserId=id;document.getElementById('delModal').classList.add('open');}
+function askPwd(id){pwdUserId=id;document.getElementById('newPwdInput').value='';document.getElementById('pwdModal').classList.add('open');}
+function closeModals(){document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open'));deleteUserId=null;pwdUserId=null;}
+
+function confirmDelete(){
+  if(!deleteUserId)return;
+  fetch('/api/users/delete',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session,id:deleteUserId})})
+  .then(r=>r.json()).then(d=>{
+    if(d.ok){toast('Użytkownik usunięty','ok');loadUsers();}
+    else toast(d.error||'Błąd','err');
+    closeModals();
+  });
+}
+
+function confirmPwd(){
+  if(!pwdUserId)return;
+  var pwd = document.getElementById('newPwdInput').value;
+  if(!pwd){toast('Wpisz hasło','err');return;}
+  fetch('/api/users/password',{method:'POST',headers:{'Content-Type':'application/json','x-session':session},body:JSON.stringify({session,id:pwdUserId,password:pwd})})
+  .then(r=>r.json()).then(d=>{
+    if(d.ok)toast('Hasło zmienione','ok');
+    else toast(d.error||'Błąd','err');
+    closeModals();
+  });
+}
+
+function doLogout(){
+  fetch('/api/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session})});
+  localStorage.removeItem('session');localStorage.removeItem('role');location.href='/login';
+}
+
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
 </html>
