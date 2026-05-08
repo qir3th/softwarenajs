@@ -24,6 +24,10 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
 .field select option{background:#1a1a22;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.input-with-btn{display:flex;gap:8px;}
+.input-with-btn input{flex:1;}
+.gen-btn{background:#23232f;border:1.5px solid #2a2a35;color:#aaa;border-radius:9px;padding:0 14px;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.gen-btn:hover{border-color:#6c63ff;color:#fff;background:#1a1a2a;}
 .photo-upload{border:2px dashed #2a2a35;border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}
 .photo-upload:hover{border-color:#6c63ff;background:#18181f;}
 .photo-upload.err{border-color:#e05c5c;}
@@ -47,6 +51,7 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
 .result-box input{width:100%;background:#0a0a10;border:1px solid #2a2a35;border-radius:8px;padding:10px;font-size:13px;color:#aaa;outline:none;}
 .copy-link-btn{width:100%;background:none;border:1px solid #1D9E75;color:#5DCAA5;border-radius:8px;padding:9px;font-size:13px;cursor:pointer;margin-top:8px;}
 .copy-link-btn:hover{background:#0a1a10;}
+.pesel-hint{font-size:11px;color:#555;margin-top:4px;}
 </style>
 </head>
 <body>
@@ -87,7 +92,7 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
     <div class="field"><label>Obywatelstwo</label><input id="nationality" placeholder="POLSKIE"></div>
   </div>
 
-  <!-- Data urodzenia -->
+  <!-- Data urodzenia i PESEL -->
   <div class="form-section">
     <h2>Data urodzenia i PESEL</h2>
     <div class="three-col">
@@ -97,7 +102,14 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
     </div>
     <div class="field"><label>Miejsce urodzenia</label><input id="birthPlace" placeholder="Warszawa"></div>
     <div class="field"><label>Kraj urodzenia</label><input id="countryOfBirth" placeholder="POLSKA"></div>
-    <div class="field"><label>PESEL</label><input id="pesel" placeholder="90010100000" maxlength="11"></div>
+    <div class="field">
+      <label>PESEL</label>
+      <div class="input-with-btn">
+        <input id="pesel" placeholder="90010100000" maxlength="11">
+        <button class="gen-btn" type="button" onclick="generatePesel()">🎲 Generuj</button>
+      </div>
+      <div class="pesel-hint" id="peselHint"></div>
+    </div>
   </div>
 
   <!-- Rodzice -->
@@ -116,7 +128,13 @@ body{background:#0f0f13;color:#fff;font-family:'Segoe UI',Arial,sans-serif;min-h
   <!-- Dokument -->
   <div class="form-section">
     <h2>Dane dokumentu</h2>
-    <div class="field"><label>Seria i numer</label><input id="seriesAndNumber" placeholder="AAA000000"></div>
+    <div class="field">
+      <label>Seria i numer</label>
+      <div class="input-with-btn">
+        <input id="seriesAndNumber" placeholder="AAA000000">
+        <button class="gen-btn" type="button" onclick="generateSeries()">🎲 Generuj</button>
+      </div>
+    </div>
     <div class="two-col">
       <div class="field"><label>Data wydania</label><input id="givenDate" placeholder="01.01.2020"></div>
       <div class="field"><label>Data ważności</label><input id="expiryDate" placeholder="01.01.2030"></div>
@@ -149,7 +167,6 @@ var params = new URLSearchParams(location.search);
 
 if (!session) { location.href = '/login'; }
 
-// Edit mode?
 if (params.has('id')) {
   editId = parseInt(params.get('id'));
   document.getElementById('page-title').textContent = 'Edytuj kartę';
@@ -169,7 +186,6 @@ if (params.has('id')) {
   }).catch(()=>{});
 }
 
-// Photo upload
 document.getElementById('photoInput').addEventListener('change', function(e){
   var file = e.target.files[0];
   if(!file) return;
@@ -194,11 +210,72 @@ function setPhoto(url, blob){
   }
 }
 
+// Generuj serię i numer: 3 litery + 6 cyfr
+function generateSeries(){
+  var letters = 'ABCDEFGHIJKLMNOPRSTUWXYZ';
+  var result = '';
+  for(var i=0;i<3;i++) result += letters[Math.floor(Math.random()*letters.length)];
+  for(var i=0;i<6;i++) result += Math.floor(Math.random()*10);
+  document.getElementById('seriesAndNumber').value = result;
+  document.getElementById('seriesAndNumber').classList.remove('err');
+}
+
+// Generuj PESEL z daty urodzenia i płci
+function generatePesel(){
+  var day   = parseInt(document.getElementById('day').value);
+  var month = parseInt(document.getElementById('month').value);
+  var year  = parseInt(document.getElementById('year').value);
+  var sex   = document.getElementById('sex').value;
+
+  if(!day || !month || !year || year < 1800 || year > 2299){
+    toast('Najpierw wpisz poprawną datę urodzenia', 'err');
+    return;
+  }
+
+  // Kodowanie miesiąca wg stulecia
+  var m = month;
+  if      (year >= 1800 && year <= 1899) m += 80;
+  else if (year >= 1900 && year <= 1999) m += 0;
+  else if (year >= 2000 && year <= 2099) m += 20;
+  else if (year >= 2100 && year <= 2199) m += 40;
+  else if (year >= 2200 && year <= 2299) m += 60;
+
+  var yy  = String(year).slice(-2).padStart(2,'0');
+  var mm  = String(m).padStart(2,'0');
+  var dd  = String(day).padStart(2,'0');
+
+  // 4 cyfry porządkowe: 10. cyfra parzysta=kobieta, nieparzysta=mężczyzna
+  var ord = Math.floor(Math.random()*1000);
+  var tenthDigit;
+  if(sex === 'M'){
+    // nieparzysta: 1,3,5,7,9
+    var odds = [1,3,5,7,9];
+    tenthDigit = odds[Math.floor(Math.random()*5)];
+  } else {
+    // parzysta: 0,2,4,6,8
+    var evens = [0,2,4,6,8];
+    tenthDigit = evens[Math.floor(Math.random()*5)];
+  }
+  var ordStr = String(ord).padStart(3,'0') + tenthDigit;
+
+  var base = yy + mm + dd + ordStr;
+
+  // Cyfra kontrolna
+  var weights = [1,3,7,9,1,3,7,9,1,3];
+  var sum = 0;
+  for(var i=0;i<10;i++) sum += parseInt(base[i]) * weights[i];
+  var check = (10 - (sum % 10)) % 10;
+
+  var pesel = base + check;
+  document.getElementById('pesel').value = pesel;
+  document.getElementById('pesel').classList.remove('err');
+  document.getElementById('peselHint').textContent = '✓ Wygenerowano dla: ' + dd+'.'+String(month).padStart(2,'0')+'.'+year + ', ' + (sex==='M'?'mężczyzna':'kobieta');
+}
+
 function save(){
   var btn = document.getElementById('saveBtn');
   if(btn.disabled) return;
 
-  // Validate
   var required = ['name','surname','nationality','pesel','seriesAndNumber','expiryDate','givenDate'];
   var ok = true;
   required.forEach(id=>{
@@ -250,11 +327,9 @@ function save(){
 }
 
 function copyResult(){
-  var link = document.getElementById('resultLink').value;
-  navigator.clipboard.writeText(link).then(()=>toast('Link skopiowany!','ok'));
+  navigator.clipboard.writeText(document.getElementById('resultLink').value).then(()=>toast('Link skopiowany!','ok'));
 }
 
-// Clear errors on input
 document.querySelectorAll('input,select').forEach(el=>{
   el.addEventListener('input',()=>el.classList.remove('err'));
 });
